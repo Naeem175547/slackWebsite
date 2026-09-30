@@ -1,0 +1,1 @@
+{"version":3,"file":"isUserMemberOfWorkspace.js","sourceRoot":"","sources":["../../src/helper/isUserMemberOfWorkspace.ts"],"names":[],"mappings":"AAAA,MAAM,UAAU,uBAAuB,CAAC,SAAc,EAAE,MAAc;IACpE,OAAO,SAAS,CAAC,OAAO,CAAC,IAAI,CAAC,CAAC,MAAW,EAAE,EAAE,CAAC,MAAM,KAAK,MAAM,CAAC,IAAI,CAAC,EAAE,CAAC,CAAC;AAC5E,CAAC"}

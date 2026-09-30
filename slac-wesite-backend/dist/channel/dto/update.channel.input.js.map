@@ -1,0 +1,1 @@
+{"version":3,"file":"update.channel.input.js","sourceRoot":"","sources":["../../../src/channel/dto/update.channel.input.ts"],"names":[],"mappings":";;;;;;AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,iBAAiB,CAAC;AAGrC,IAAM,kBAAkB,GAAxB,MAAM,kBAAkB;CAA0C,CAAA;AAA5D,kBAAkB;IAD9B,SAAS,EAAE;GACC,kBAAkB,CAA0C"}

@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+@theme {
+  --color-slack: #5c3b58;
+}
