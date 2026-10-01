@@ -5,11 +5,20 @@ import { SigninCard } from './components/organisms/Auth/signInCard';
 import NotFound from './pages/notFound/notFound';
 import { SignupContainer } from './components/organisms/Auth/SignupContainer';
 import { SigninContainer } from './components/organisms/Auth/SigninContainer';
+import { ProtectedRoute } from './components/molecules/ProtectedRoute';
+import Home from './pages/Home/Home';
 
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/home" element={<p>Homepage</p>} />
+      <Route
+        path="/home"
+        element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/auth/signup"
         element={
@@ -26,6 +35,7 @@ export default function AppRoutes() {
           </Auth>
         }
       />
+
       <Route path="/*" element={<NotFound />} />
     </Routes>
   );
