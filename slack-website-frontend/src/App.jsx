@@ -8,8 +8,8 @@ function App() {
     <>
       <AppContextProvider>
         <AppRoutes />
-        <Toaster />
       </AppContextProvider>
+      <Toaster />
     </>
   );
 }
