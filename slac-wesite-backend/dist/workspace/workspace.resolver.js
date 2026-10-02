@@ -30,6 +30,9 @@ let WorkspaceResolver = class WorkspaceResolver {
             ownerId: userId,
         });
     }
+    async fetchWorkspaces() {
+        return this.workspaceService.getAllWorkspaces();
+    }
     deleteWorkspace(workspaceId, context) {
         const userId = context.req.user.id;
         return this.workspaceService.deleteWorkspaceService(workspaceId, userId);
@@ -68,6 +71,12 @@ __decorate([
     __metadata("design:paramtypes", [CreateWorkspaceInput, Object]),
     __metadata("design:returntype", void 0)
 ], WorkspaceResolver.prototype, "createWorkspace", null);
+__decorate([
+    Query(() => WorkspacesResponse),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], WorkspaceResolver.prototype, "fetchWorkspaces", null);
 __decorate([
     Mutation(() => WorkspaceResponse),
     __param(0, Args('workspaceId')),

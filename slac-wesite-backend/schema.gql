@@ -120,6 +120,7 @@ type Query {
   userByUsername(username: String!): UserResponse!
   getPaginatedMessage(messageParams: MessageParams!, page: Int, limit: Int): MessageResponse!
   getChannelById(channelId: Float!): FullChannelResponse!
+  fetchWorkspaces: WorkspacesResponse!
   getWorkspacesOfUserByMember: WorkspacesResponse!
   getWorkSpace(workspaceId: Float!): WorkspaceResponse!
   getWorkspaceByJoinCode(joinCode: String!): WorkspaceResponse!

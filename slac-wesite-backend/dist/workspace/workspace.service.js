@@ -63,6 +63,21 @@ let WorkspaceService = class WorkspaceService {
             });
         }
     }
+    async getAllWorkspaces() {
+        try {
+            const workspaces = await this.workspaceRepository.findAll();
+            return workspaces;
+        }
+        catch (error) {
+            console.log('Get all workspaces service error', error);
+            throw new GraphQLError('Failed to fetch all workspaces', {
+                extensions: {
+                    code: 'WORKSPACES_FETCH_FAILED',
+                    httpStatus: 500,
+                },
+            });
+        }
+    }
     async deleteWorkspaceService(workspaceId, userId) {
         try {
             const workspace = await this.workspaceRepository.findById(workspaceId);

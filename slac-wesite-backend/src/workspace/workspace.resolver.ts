@@ -24,6 +24,11 @@ export class WorkspaceResolver {
       ownerId: userId,
     });
   }
+  @Query(() => WorkspacesResponse)
+  async fetchWorkspaces() {
+    return this.workspaceService.getAllWorkspaces();
+  }
+
   @Mutation(() => WorkspaceResponse)
   deleteWorkspace(
     @Args('workspaceId') workspaceId: number,

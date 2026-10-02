@@ -5,6 +5,7 @@ export declare class WorkspaceResolver {
     private readonly workspaceService;
     constructor(workspaceService: WorkspaceService);
     createWorkspace(createWorkspaceInput: CreateWorkspaceInput, context: any): Promise<import("./entity/workspace.entity.js").WorkspaceEntity>;
+    fetchWorkspaces(): Promise<import("./entity/workspace.entity.js").WorkspaceEntity[]>;
     deleteWorkspace(workspaceId: number, context: any): Promise<any>;
     getWorkspacesOfUserByMember(context: any): Promise<import("./entity/workspace.entity.js").WorkspaceEntity[]>;
     getWorkSpace(workspaceId: number, context: any): Promise<import("./entity/workspace.entity.js").WorkspaceEntity>;

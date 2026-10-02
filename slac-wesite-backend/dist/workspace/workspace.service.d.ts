@@ -15,6 +15,7 @@ export declare class WorkspaceService {
     createWorkspaceService(createWorkspaceDto: CreateWorkspaceInput & {
         ownerId: number;
     }): Promise<WorkspaceEntity>;
+    getAllWorkspaces(): Promise<WorkspaceEntity[]>;
     deleteWorkspaceService(workspaceId: number, userId: number): Promise<any>;
     getAllWorkspacesByMemberId(userId: number): Promise<WorkspaceEntity[]>;
     getWorksapceService(workspaceId: number, userId: number): Promise<WorkspaceEntity>;
