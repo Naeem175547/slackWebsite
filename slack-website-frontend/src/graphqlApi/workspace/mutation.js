@@ -16,20 +16,4 @@ const CREATE_WORKSPACE = gql`
   }
 `;
 
-const FETCH_WORKSPACES = gql`
-  query FetchWorkspaces {
-    fetchWorkspaces {
-      success
-      message
-      data {
-        id
-        name
-        JoinCode
-        createdAt
-        updatedAt
-      }
-    }
-  }
-`;
-
-export { CREATE_WORKSPACE, FETCH_WORKSPACES };
+export { CREATE_WORKSPACE };

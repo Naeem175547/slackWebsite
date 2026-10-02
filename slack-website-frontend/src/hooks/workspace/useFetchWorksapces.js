@@ -1,3 +1,6 @@
+import { useQuery } from '@apollo/client';
+import { FETCH_WORKSPACES } from '@/graphqlApi/workspace/query';
+import { toast } from '@/components/ui/toast';
 const useFetchWorkspaces = () => {
   const { data, loading, error } = useQuery(FETCH_WORKSPACES, {
     onCompleted: (data) => {
@@ -19,3 +22,5 @@ const useFetchWorkspaces = () => {
   });
   return { data, loading, error };
 };
+
+export default useFetchWorkspaces;
