@@ -11,9 +11,23 @@ export default [
   },
 
   {
+    files: ["**/*.{js,jsx}"],
+
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
+      },
+    },
+
     settings: {
       react: {
-        version: "detect",
+        version: "19.3",
       },
     },
 

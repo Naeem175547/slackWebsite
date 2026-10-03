@@ -7,10 +7,10 @@ export const useFetchWorkspaces = () => {
   const { data, loading, error } = useQuery(FETCH_WORKSPACES);
 
   useEffect(() => {
-    if (data && !data.fetchWorkspaces?.success) {
+    if (data && !data.getWorkspacesOfUserByMember?.success) {
       toast.add({
         title: 'Error',
-        description: data.fetchWorkspaces?.message,
+        description: data.getWorkspacesOfUserByMember?.message,
         type: 'error',
       });
     }
@@ -27,7 +27,7 @@ export const useFetchWorkspaces = () => {
   }, [error]);
 
   return {
-    workspaces: data?.fetchWorkspaces?.data,
+    workspaces: data?.getWorkspacesOfUserByMember?.data,
     loading,
     error,
   };

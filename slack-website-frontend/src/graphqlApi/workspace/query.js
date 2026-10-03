@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 const FETCH_WORKSPACES = gql`
-  query FetchWorkspaces {
-    fetchWorkspaces {
+  query GetWorkspacesOfUserByMember {
+    getWorkspacesOfUserByMember {
       success
       message
       data {
