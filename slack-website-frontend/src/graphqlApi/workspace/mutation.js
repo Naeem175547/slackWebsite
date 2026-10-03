@@ -8,9 +8,7 @@ const CREATE_WORKSPACE = gql`
       data {
         id
         name
-        JoinCode
-        createdAt
-        updatedAt
+        joinCode
       }
     }
   }
