@@ -9,6 +9,8 @@ import {
 import { useAuth } from '@/hooks/context/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/components/ui/toast';
+import { PencilIcon } from 'lucide-react';
+import useCreateWorkspaceModel from '@/hooks/context/useCreateWorkspaceModel';
 
 export const UserButton = () => {
   const { auth, logout } = useAuth();
@@ -23,6 +25,16 @@ export const UserButton = () => {
     navigate('/auth/signin');
   }
 
+  const { setOpenCreateWorkspaceModal } = useCreateWorkspaceModel();
+
+  const openWorkspaceCreateModal = () => {
+    setOpenCreateWorkspaceModal(true);
+  };
+
+  if (!auth?.user) {
+    return null;
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="relative outline-none">
@@ -35,6 +47,10 @@ export const UserButton = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent>
+        <DropdownMenuItem onClick={openWorkspaceCreateModal}>
+          <PencilIcon className="size-4 mr-2 h-10" />
+          Create Workspace
+        </DropdownMenuItem>
         <DropdownMenuItem>
           <SettingsIcon className="mr-2 size-4 h-10" />
           Settings

@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { CREATE_WORKSPACE } from '@/graphqlApi/workspace/mutation';
 import { toast } from '@/components/ui/toast';
 function useCreateWorkspace() {
@@ -8,13 +8,13 @@ function useCreateWorkspace() {
         toast.add({
           title: 'Workspace Created',
           description: data.createWorkspace.message,
-          variant: 'success',
+          type: 'success',
         });
       } else {
         toast.add({
           title: 'Error',
           description: data.createWorkspace.message,
-          variant: 'destructive',
+          type: 'error',
         });
       }
     },
@@ -23,7 +23,7 @@ function useCreateWorkspace() {
       toast.add({
         title: 'Error',
         description: error.message,
-        variant: 'destructive',
+        type: 'error',
       });
     },
   });

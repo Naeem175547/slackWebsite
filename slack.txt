@@ -1471,3 +1471,44 @@ dto,ObjectType, InputType ,Entity
 they can also be used as TypeScript types for type checking, because they are classes.
 but they have different Suppose (you know)
 
+
+
+
+
+Rule for writing good code.
+
+### Frontend API Architecture
+
+1. **API Folder**
+
+   * Create an `api` folder for all REST APIs and GraphQL operations.
+   * **REST:** Make the API call and return the response.
+   * **GraphQL:** Write the required queries and mutations using `gql`.
+
+2. **Hooks**
+
+   * Create custom hooks for calling the APIs.
+   * Use the appropriate query/mutation library.
+   * The hook should return:
+
+     * `data`
+     * `loading`
+     * `error`
+     * `mutate` function for performing operations
+
+3. **Page / Component**
+
+   * Use the custom hook in the respective page or component.
+   * Use the returned `data`, `loading`, `error`, and `mutate` function to implement the required functionality and UI behavior.
+
+### Flow
+
+**API → Hook → Page/Component**
+
+* `api` → Handles API communication.
+* `hook` → Handles API state and exposes the required functions/data.
+* `page/component` → Uses that data and functions to implement the actual functionality.
+
+
+-->
+initail error handling is must be done in hook  like error, complete for mutation.
