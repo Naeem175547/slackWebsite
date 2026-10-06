@@ -18,13 +18,9 @@ export const CreateWorkspaceModal = () => {
     useCreateWorkspaceModal();
 
   const { loading, createWorkspaceMutate } = useCreateWorkspace();
-
   const [workspaceName, setWorkspaceName] = useState('');
-
   const navigate = useNavigate();
-
   const isPending = loading;
-
   const handleClose = () => {
     setOpenCreateWorkspaceModal(false);
   };
