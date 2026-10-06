@@ -33,4 +33,3 @@ export const useFetchWorkspaces = () => {
   };
 };
 
-export default useFetchWorkspaces;
