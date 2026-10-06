@@ -9,6 +9,8 @@ export declare class Workspace {
     channels?: Channel[];
     messages?: Message[];
     members?: WorkspaceMember[];
+    createdAt: Date;
+    updatedAt: Date;
 }
 export declare class WorkspaceResponse {
     success: boolean;

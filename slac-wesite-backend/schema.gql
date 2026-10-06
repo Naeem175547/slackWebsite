@@ -77,6 +77,8 @@ type Workspace {
   channels: [Channel!]
   messages: [Message!]
   members: [WorkspaceMember!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type WorkspaceResponse {
@@ -122,7 +124,7 @@ type Query {
   getChannelById(channelId: Float!): FullChannelResponse!
   fetchWorkspaces: WorkspacesResponse!
   getWorkspacesOfUserByMember: WorkspacesResponse!
-  getWorkSpace(workspaceId: Float!): WorkspaceResponse!
+  getWorkSpace(workspaceId: Int!): WorkspaceResponse!
   getWorkspaceByJoinCode(joinCode: String!): WorkspaceResponse!
   isUserMemberOfWorkspace(workspaceId: Float!): User!
 }

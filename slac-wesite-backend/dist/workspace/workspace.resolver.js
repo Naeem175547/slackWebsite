@@ -11,7 +11,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 import { UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Resolver, Query } from '@nestjs/graphql';
+import { Args, Context, Mutation, Resolver, Query, Int } from '@nestjs/graphql';
 import { AuthGuards } from '../common/guards/auth.guard.js';
 import { CreateWorkspaceInput } from './dto/create.workspace.input.js';
 import { WorkspaceService } from './workspace.service.js';
@@ -94,7 +94,7 @@ __decorate([
 ], WorkspaceResolver.prototype, "getWorkspacesOfUserByMember", null);
 __decorate([
     Query(() => WorkspaceResponse),
-    __param(0, Args('workspaceId')),
+    __param(0, Args('workspaceId', { type: () => Int })),
     __param(1, Context()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Object]),

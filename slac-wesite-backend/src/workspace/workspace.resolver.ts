@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Resolver, Query } from '@nestjs/graphql';
+import { Args, Context, Mutation, Resolver, Query, Int } from '@nestjs/graphql';
 import { AuthGuards } from '../common/guards/auth.guard.js';
 import { CreateWorkspaceInput } from './dto/create.workspace.input.js';
 import { WorkspaceService } from './workspace.service.js';
@@ -46,7 +46,7 @@ export class WorkspaceResolver {
 
   @Query(() => WorkspaceResponse)
   getWorkSpace(
-    @Args('workspaceId') workspaceId: number,
+    @Args('workspaceId',{type:()=>Int}) workspaceId: number,
     @Context() context: any,
   ) {
     const userId = context.req.user.id;

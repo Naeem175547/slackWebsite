@@ -19,6 +19,8 @@ let Workspace = class Workspace {
     channels;
     messages;
     members;
+    createdAt;
+    updatedAt;
 };
 __decorate([
     Field(),
@@ -48,6 +50,14 @@ __decorate([
     Field(() => [WorkspaceMember], { nullable: true }),
     __metadata("design:type", Array)
 ], Workspace.prototype, "members", void 0);
+__decorate([
+    Field(),
+    __metadata("design:type", Date)
+], Workspace.prototype, "createdAt", void 0);
+__decorate([
+    Field(),
+    __metadata("design:type", Date)
+], Workspace.prototype, "updatedAt", void 0);
 Workspace = __decorate([
     ObjectType()
 ], Workspace);

@@ -26,6 +26,12 @@ export class Workspace {
 
   @Field(() => [WorkspaceMember], { nullable: true })
   members?: WorkspaceMember[];
+
+  @Field()
+  createdAt:Date
+
+  @Field()
+  updatedAt:Date
 }
 
 @ObjectType()
