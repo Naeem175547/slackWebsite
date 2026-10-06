@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 
 import useCreateWorkspaceModal from '@/hooks/context/useCreateWorkspaceModel';
 import useCreateWorkspace from '@/hooks/workspace/useCreateWorkspace';
+import { FETCH_WORKSPACES } from '@/graphqlApi/workspace/query';
 
 export const CreateWorkspaceModal = () => {
   const { openCreateWorkspaceModal, setOpenCreateWorkspaceModal } =
@@ -35,6 +36,9 @@ export const CreateWorkspaceModal = () => {
             name: workspaceName,
           },
         },
+        refetchQueries:[
+          {query:FETCH_WORKSPACES}
+        ]
       });
 
       console.log('Created the workspace', response);

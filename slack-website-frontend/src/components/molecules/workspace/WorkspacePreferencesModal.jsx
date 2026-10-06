@@ -5,6 +5,8 @@ import { useWorkspacePreferencesModal } from '@/hooks/context/useWorkspacePrefer
 import { useState,useEffect } from 'react';
 import { useDeleteWorkspace } from '@/hooks/workspace/useDeleteWorkspace';
 import { toast } from '@/components/ui/toast';
+import { FETCH_WORKSPACES } from '@/graphqlApi/workspace/query';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -12,6 +14,7 @@ export const WorkspacePreferencesModal = () => {
     const { initialValue, openPreferences, setOpenPreferences,workspace } = useWorkspacePreferencesModal()
     const [workspaceId,setWorkspaceId]=useState(null)
     const {deleteWorkspaceMutation}=useDeleteWorkspace()
+    const navigate=useNavigate()
 
     function handleClose() {
         setOpenPreferences(false);
@@ -25,12 +28,18 @@ export const WorkspacePreferencesModal = () => {
             await deleteWorkspaceMutation({
                 variables:{
                     workspaceId
-                }
+                },
+                refetchQueries:[
+                    {query:FETCH_WORKSPACES}
+                ]
             });
             toast.add({
                 title: 'Workspace deleted successfully',
                 type: 'success'
             });
+            setOpenPreferences(false)
+            navigate('/home')
+            
         } catch(error) {
             console.log('Error in deleting workspace', error);
             toast.add({
