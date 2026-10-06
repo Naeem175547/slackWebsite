@@ -79,7 +79,7 @@ __decorate([
 ], WorkspaceResolver.prototype, "fetchWorkspaces", null);
 __decorate([
     Mutation(() => WorkspaceResponse),
-    __param(0, Args('workspaceId')),
+    __param(0, Args('workspaceId', { type: () => Int })),
     __param(1, Context()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Object]),
@@ -110,7 +110,7 @@ __decorate([
 ], WorkspaceResolver.prototype, "getWorkspaceByJoinCode", null);
 __decorate([
     Mutation(() => WorkspaceResponse),
-    __param(0, Args('workspaceId')),
+    __param(0, Args('workspaceId', { type: () => Int })),
     __param(1, Args('updateWorkspaceInput')),
     __param(2, Context()),
     __metadata("design:type", Function),

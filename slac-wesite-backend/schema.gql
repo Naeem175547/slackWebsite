@@ -141,8 +141,8 @@ type Mutation {
   signUp(createUserInput: CreateUserInput!): UserResponse!
   signIn(email: String!, password: String!): LoginResponse!
   createWorkspace(createWorkspaceInput: CreateWorkspaceInput!): WorkspaceResponse!
-  deleteWorkspace(workspaceId: Float!): WorkspaceResponse!
-  UpdateWorkspace(workspaceId: Float!, updateWorkspaceInput: UpdateWorkspaceInput!): WorkspaceResponse!
+  deleteWorkspace(workspaceId: Int!): WorkspaceResponse!
+  UpdateWorkspace(workspaceId: Int!, updateWorkspaceInput: UpdateWorkspaceInput!): WorkspaceResponse!
   addMemberToWorkspace(workspaceId: Float!, memberId: Float!): WorkspaceMemberResponse!
   addChannelToWorkspace(workspaceId: Float!, channelName: String!): WorkspaceResponse!
 }

@@ -13,5 +13,33 @@ const CREATE_WORKSPACE = gql`
     }
   }
 `;
+const UPDATE_WORKSPACE=gql`
+mutation UpdateWorkspace($workspaceId:Int!,$updateWorkspaceInput:UpdateWorkspaceInput!){
+    UpdateWorkspace(workspaceId:$workspaceId,updateWorkspaceInput:$updateWorkSpaceInput){
+    success
+    message
+    data{
+    id
+    name
+    j
+    }
+}
+}
+`
 
-export { CREATE_WORKSPACE };
+const DELETE_WORKSPACE=gql`
+mutation deleteWorkspace($workspaceId:Int!){
+    deleteWorkspace(workspaceId:$workspaceId){
+    success
+    message
+    data{
+    id
+    name
+    }
+}
+}
+`
+
+export { CREATE_WORKSPACE ,UPDATE_WORKSPACE,DELETE_WORKSPACE};
+
+

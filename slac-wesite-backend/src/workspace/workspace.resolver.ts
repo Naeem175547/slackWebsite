@@ -31,7 +31,7 @@ export class WorkspaceResolver {
 
   @Mutation(() => WorkspaceResponse)
   deleteWorkspace(
-    @Args('workspaceId') workspaceId: number,
+    @Args('workspaceId',{type:()=>Int!}) workspaceId: number,
     @Context() context: any,
   ) {
     const userId = context.req.user.id;
@@ -67,7 +67,7 @@ export class WorkspaceResolver {
 
   @Mutation(() => WorkspaceResponse)
   UpdateWorkspace(
-    @Args('workspaceId') workspaceId: number,
+    @Args('workspaceId',{type:()=>Int!}) workspaceId: number,
     @Args('updateWorkspaceInput') updateWorkspaceInput: UpdateWorkspaceInput,
     @Context() context: any,
   ) {
