@@ -39,8 +39,8 @@ export const WorkspaceSwitcher = () => {
                         return (
                             <DropdownMenuItem
                                 className='cursor-pointer flex-col justify-start items-start'
-                                onClick={() => navigate(`/workspaces/${workspace._id}`)}
-                                key={workspace._id}
+                                onClick={() => navigate(`/workspaces/${workspace.id}`)}
+                                key={workspace.id}
                             >
                                 <p
                                     className='truncate'
