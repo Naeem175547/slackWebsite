@@ -33,6 +33,7 @@ export const useGetWorkspaceById = (workspaceId) => {
     workspace: data?.getWorkSpace?.data,
     loading,
     isFetching: loading,
+    isSuccess:data,
     error,
   };
 };
