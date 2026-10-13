@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUpdateWorkspace } from '@/hooks/workspace/useUpdateWorkspace';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useConfirm } from '@/hooks/useConfirm';
 
 
 
@@ -21,6 +22,9 @@ export const WorkspacePreferencesModal = () => {
     const [editOpen,setEditOpen]=useState(false)
     const [renameValue,setRenameValue]=useState(workspace?.name)
     const {isPending,updateWorkspaceMutation}=useUpdateWorkspace()
+    const {confirmation,ConfirmDialog}=useConfirm({title:"do you want to delete the workspace?",message:"this action cannnot be undone."})
+    const {confirmation:updateConfirmation,ConfirmDialog:UpdateConfirmDialog}=useConfirm({title:"do you want to update the workspace?",message:"this action cannnot be undone."})
+
 
     function handleClose() {
         setOpenPreferences(false);
@@ -34,6 +38,11 @@ export const WorkspacePreferencesModal = () => {
 
     async function handleDelete() {
         try {
+            const ok=await confirmation()
+            console.log('Confirmation received')
+            if(!ok){
+                return;
+            }
             await deleteWorkspaceMutation({
                 variables:{
                     workspaceId
@@ -60,6 +69,11 @@ export const WorkspacePreferencesModal = () => {
 
     async function handleFormSubmit(e) {
     e.preventDefault();
+    const ok=await updateConfirmation()
+            console.log('Confirmation received')
+            if(!ok){
+                return;
+            }
 
     await updateWorkspaceMutation({
         variables: {
@@ -78,6 +92,8 @@ export const WorkspacePreferencesModal = () => {
 }
     return (
         <>
+        <ConfirmDialog/>
+        <UpdateConfirmDialog/>
         <Dialog
         open={openPreferences}
         onOpenChange={handleClose}
