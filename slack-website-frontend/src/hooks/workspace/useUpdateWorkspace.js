@@ -1,13 +1,22 @@
 import { UPDATE_WORKSPACE } from "@/graphqlApi/workspace/mutation"
 import { useMutation } from "@apollo/client/react"
+import { toast } from "@/components/ui/toast"
 
 export const useUpdateWorkspace=()=>{
     const [mutate,{data,error,loading}]=useMutation(UPDATE_WORKSPACE,{
         onCompleted:(data)=>{
-            console.log("update operation completed..")
+        toast.add({
+          title: 'Workspace Updated',
+          description: data.UpdateWorkspace.message,
+          type: 'success',
+        });
         },
         onError:(error)=>{
-            console.log("update operation failed")
+            toast.add({
+          title: 'Workspace Update Failed',
+          description: error.message,
+          type: 'error',
+        });
         }
     })
     return {

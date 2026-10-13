@@ -15,13 +15,13 @@ const CREATE_WORKSPACE = gql`
 `;
 const UPDATE_WORKSPACE=gql`
 mutation UpdateWorkspace($workspaceId:Int!,$updateWorkspaceInput:UpdateWorkspaceInput!){
-    UpdateWorkspace(workspaceId:$workspaceId,updateWorkspaceInput:$updateWorkSpaceInput){
+    UpdateWorkspace(workspaceId:$workspaceId,updateWorkspaceInput:$updateWorkspaceInput){
     success
     message
     data{
     id
     name
-    j
+    joinCode
     }
 }
 }
