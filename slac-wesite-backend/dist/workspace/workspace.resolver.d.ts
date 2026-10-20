@@ -14,4 +14,5 @@ export declare class WorkspaceResolver {
     addMemberToWorkspace(context: any, workspaceId: number, memberId: number): Promise<import("./entity/workspace-member.entity.js").WorkspaceMemberEntity>;
     addChannelToWorkspace(context: any, workspaceId: number, channelName: string): Promise<import("./entity/workspace.entity.js").WorkspaceEntity>;
     resetJoinCodeController(workspaceId: number, context: any): Promise<import("./entity/workspace.entity.js").WorkspaceEntity>;
+    joinWorkspace(workspaceId: number, joinCode: string, context: any): Promise<import("./entity/workspace-member.entity.js").WorkspaceMemberEntity>;
 }

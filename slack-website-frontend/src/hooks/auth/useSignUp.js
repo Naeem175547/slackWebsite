@@ -1,6 +1,6 @@
 import { toast } from '@/components/ui/toast';
 
-import { signUp } from '@/graphqlApi/mutation/auth';
+import { signUp } from '@/graphqlApi/auth/auth';
 
 import { useMutation } from '@apollo/client/react';
 

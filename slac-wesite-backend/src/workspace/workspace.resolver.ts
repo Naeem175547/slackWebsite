@@ -9,6 +9,7 @@ import {
   WorkspaceMember,
   WorkspaceMemberResponse,
 } from './dto/workspace.member.type.js';
+import { multicast } from 'rxjs';
 
 @Resolver()
 @UseGuards(AuthGuards)
@@ -115,4 +116,12 @@ export class WorkspaceResolver {
     return this.workspaceService.resetWorkspaceJoinCodeService(workspaceId,userId); 
 
   }
+  @Mutation(()=>WorkspaceMemberResponse)
+  joinWorkspace(@Args('workspaceId') workspaceId:number,@Args('joinCode') joinCode:string,@Context() context:any){
+    const userId=context.req.user.id;
+    return this.workspaceService.joinWorkspaceService(workspaceId,joinCode,userId)
+
+
+  }
+
 }

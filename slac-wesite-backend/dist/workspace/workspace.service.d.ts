@@ -24,4 +24,5 @@ export declare class WorkspaceService {
     addMemberToWorkspaceService(workspaceId: number, memberId: number, userId: number): Promise<import("./entity/workspace-member.entity.js").WorkspaceMemberEntity>;
     addChannelToWorkspaceService(workspaceId: number, channelName: string, userId: number): Promise<WorkspaceEntity>;
     resetWorkspaceJoinCodeService(worksapceId: number, userId: number): Promise<WorkspaceEntity>;
+    joinWorkspaceService(workspaceId: number, joinCode: string, userId: number): Promise<import("./entity/workspace-member.entity.js").WorkspaceMemberEntity>;
 }

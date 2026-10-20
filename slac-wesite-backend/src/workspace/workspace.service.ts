@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { UpdateWorkspaceInput } from './dto/update.workspace.input.js';
 import { UserService } from '../user/user.service.js';
 import { RabbitMqProducer } from '../rabbitmq/rabbitmq.producer.js';
+import { graphql } from 'graphql';
 
 @Injectable()
 export class WorkspaceService {
@@ -414,6 +415,32 @@ export class WorkspaceService {
       const newJoinCode=uuidv4().substring(0,6).toUpperCase();
       const updatedWorkspace=await this.UpdateWorkspaceService(worksapceId,{joinCode:newJoinCode},userId)
       return updatedWorkspace;
+
+  }
+  async joinWorkspaceService(workspaceId:number,joinCode:string,userId:number){
+    try{
+      const workspace=await this.workspaceRepository.getWorkspaceDetailsById(workspaceId)
+    if(!workspace){
+      throw new GraphQLError('workspace not found')
+    }
+
+    if(workspace.joinCode!==joinCode.trim().toUpperCase()){
+      throw new GraphQLError('Invalid join Code')
+    }
+
+    const workspaceMember=await this.workspaceRepository.addMemberToWorkspace(workspaceId,userId,'member')
+    return workspaceMember;
+
+    }
+    catch(error){
+      if(error instanceof GraphQLError){
+        throw error;
+      }
+      throw new GraphQLError('join workspace operation failed')
+    }
+
+
+
 
   }
 }

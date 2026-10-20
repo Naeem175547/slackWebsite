@@ -334,6 +334,25 @@ let WorkspaceService = class WorkspaceService {
         const updatedWorkspace = await this.UpdateWorkspaceService(worksapceId, { joinCode: newJoinCode }, userId);
         return updatedWorkspace;
     }
+    async joinWorkspaceService(workspaceId, joinCode, userId) {
+        try {
+            const workspace = await this.workspaceRepository.getWorkspaceDetailsById(workspaceId);
+            if (!workspace) {
+                throw new GraphQLError('workspace not found');
+            }
+            if (workspace.joinCode !== joinCode.trim().toUpperCase()) {
+                throw new GraphQLError('Invalid join Code');
+            }
+            const workspaceMember = await this.workspaceRepository.addMemberToWorkspace(workspaceId, userId, 'member');
+            return workspaceMember;
+        }
+        catch (error) {
+            if (error instanceof GraphQLError) {
+                throw error;
+            }
+            throw new GraphQLError('join workspace operation failed');
+        }
+    }
 };
 WorkspaceService = __decorate([
     Injectable(),

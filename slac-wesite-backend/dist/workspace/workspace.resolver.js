@@ -66,6 +66,10 @@ let WorkspaceResolver = class WorkspaceResolver {
         const userId = context.req.user.id;
         return this.workspaceService.resetWorkspaceJoinCodeService(workspaceId, userId);
     }
+    joinWorkspace(workspaceId, joinCode, context) {
+        const userId = context.req.user.id;
+        return this.workspaceService.joinWorkspaceService(workspaceId, joinCode, userId);
+    }
 };
 __decorate([
     Mutation(() => WorkspaceResponse),
@@ -147,6 +151,15 @@ __decorate([
     __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", void 0)
 ], WorkspaceResolver.prototype, "resetJoinCodeController", null);
+__decorate([
+    Mutation(() => WorkspaceMemberResponse),
+    __param(0, Args('workspaceId')),
+    __param(1, Args('joinCode')),
+    __param(2, Context()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, String, Object]),
+    __metadata("design:returntype", void 0)
+], WorkspaceResolver.prototype, "joinWorkspace", null);
 WorkspaceResolver = __decorate([
     Resolver(),
     UseGuards(AuthGuards),

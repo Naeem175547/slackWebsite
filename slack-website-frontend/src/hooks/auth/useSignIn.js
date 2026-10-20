@@ -1,4 +1,4 @@
-import { signIn } from '@/graphqlApi/mutation/auth';
+import { signIn } from '@/graphqlApi/auth/auth';
 import { useMutation } from '@apollo/client/react';
 import { toast } from '@/components/ui/toast';
 import { useAuth } from '../context/useAuth';
