@@ -100,7 +100,7 @@ export class WorkspaceResolver {
   @Mutation(() => WorkspaceResponse)
   addChannelToWorkspace(
     @Context() context: any,
-    @Args('workspaceId') workspaceId: number,
+    @Args('workspaceId', { type: () => Int }) workspaceId: number,
     @Args('channelName') channelName: string,
   ) {
     const userId = context.req.user.id;

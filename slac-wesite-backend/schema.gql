@@ -144,7 +144,7 @@ type Mutation {
   deleteWorkspace(workspaceId: Int!): WorkspaceResponse!
   UpdateWorkspace(workspaceId: Int!, updateWorkspaceInput: UpdateWorkspaceInput!): WorkspaceResponse!
   addMemberToWorkspace(workspaceId: Float!, memberId: Float!): WorkspaceMemberResponse!
-  addChannelToWorkspace(workspaceId: Float!, channelName: String!): WorkspaceResponse!
+  addChannelToWorkspace(workspaceId: Int!, channelName: String!): WorkspaceResponse!
   resetJoinCodeController(workspaceId: Int!): WorkspaceResponse!
   joinWorkspace(workspaceId: Float!, joinCode: String!): WorkspaceMemberResponse!
 }

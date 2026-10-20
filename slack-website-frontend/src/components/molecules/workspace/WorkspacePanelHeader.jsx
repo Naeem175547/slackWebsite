@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/context/useAuth';
 import { useWorkspacePreferencesModal } from '@/hooks/context/useWorkspacePreferencesModal';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { WorkspaceInviteModal } from '@/components/organisms/model/WorkspaceInviteModel';
 
 export const WorkspacePanelHeader = ({ workspace }) => {
 
@@ -12,7 +13,8 @@ export const WorkspacePanelHeader = ({ workspace }) => {
     const workspacemembers = workspace?.members;
     const { auth } = useAuth(); 
     // console.log(auth);
-    console.log("wordspace member",workspacemembers)
+    // console.log("wordspace member",workspacemembers)
+    const [openInviteModel,setOpenInviteModel]=useState(false)
     const isLoggedInUserAdminOfWorkspace = workspacemembers?.find(member => member?.user.id === auth?.user?.id && member.role === 'admin');
     // console.log(isLoggedInUserAdminOfWorkspace);
 
@@ -25,6 +27,13 @@ export const WorkspacePanelHeader = ({ workspace }) => {
     
 
     return (
+        <>
+        <WorkspaceInviteModal
+        openInviteModal={openInviteModel}
+        setOpenInviteModal={setOpenInviteModel}
+        workspaceName={workspace.name}
+        joinCode={workspace?.joinCode}
+        />
         <div
             className='flex items-center justify-between px-4 h-[50px] gap-0.5'
         >
@@ -75,6 +84,8 @@ export const WorkspacePanelHeader = ({ workspace }) => {
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
+                                onClick={()=>setOpenInviteModel(true)}
+
                                 className='cursor-pointer py-2'
                             >
                                 Invite people to {workspace?.name}
@@ -103,5 +114,6 @@ export const WorkspacePanelHeader = ({ workspace }) => {
                 </Button>
             </div>
         </div>
+        </>
     );
 };

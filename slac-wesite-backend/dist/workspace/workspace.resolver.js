@@ -137,7 +137,7 @@ __decorate([
 __decorate([
     Mutation(() => WorkspaceResponse),
     __param(0, Context()),
-    __param(1, Args('workspaceId')),
+    __param(1, Args('workspaceId', { type: () => Int })),
     __param(2, Args('channelName')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Number, String]),

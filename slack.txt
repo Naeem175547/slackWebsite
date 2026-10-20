@@ -1825,3 +1825,115 @@ const buttonVariants = cva("rounded-md", {
 
 
 --->
+useQueryClient and invalidateQueries
+1. useQueryClient()
+Gets the existing Query Client, which manages React Query's cache.
+
+2. invalidateQueries()
+Marks cached query data as stale so React Query can fetch fresh data again.
+Example (Copy Format)
+import { useQueryClient } from '@tanstack/react-query';
+
+const queryClient = useQueryClient();
+
+// Refresh workspace list after adding a workspace
+queryClient.invalidateQueries({
+  queryKey: ['workspaces'],
+});
+
+
+Remember:
+- useQueryClient() → Access the cache manager.
+- invalidateQueries() → Mark cached data as stale and refetch active matching queries.
+Real use: After a mutation (add, update, or delete), invalidate the related query to refresh the UI.
+
+--->
+await addChannelToWorkspaceMutation({
+  variables: {
+    workspaceId: Number(currentWorkspace.id),
+    channelName,
+  },
+  refetchQueries: [
+    {
+      query: FETCH_WORKSPACE_BY_ID,
+      variables: {
+        workspaceId: Number(currentWorkspace.id),
+      },
+    },
+  ],
+  awaitRefetchQueries: true, ->it means wait until refetchQueries finished
+});
+
+console.log("Everything finished!");
+
+--->
+
+navigator in JavaScript — One-Shot Notes
+navigator is a browser object that provides information about the browser 
+and access to features like clipboard, geolocation, and online status.
+
+// 1. Copy text
+await navigator.clipboard.writeText("Hello");
+
+// 2. Read copied text
+const text = await navigator.clipboard.readText();
+
+// 3. Check internet connection status
+console.log(navigator.onLine); // true or false
+
+// 4. Get browser language
+console.log(navigator.language); // e.g. "en-US"
+
+// 5. Get browser languages
+console.log(navigator.languages);
+
+// 6. Get user agent information
+console.log(navigator.userAgent);
+
+// 7. Check if cookies are enabled
+console.log(navigator.cookieEnabled);
+
+// 8. Get device memory (not supported in every browser)
+console.log(navigator.deviceMemory);
+
+// 9. Access geolocation (requires permission)
+navigator.geolocation.getCurrentPosition(
+  (position) => {
+    console.log(position.coords.latitude);
+    console.log(position.coords.longitude);
+  },
+  (error) => console.log(error.message)
+);
+
+// 10. Share content (supported browsers/devices)
+if (navigator.share) {
+  await navigator.share({
+    title: "My Website",
+    text: "Check this out!",
+    url: window.location.href,
+  });
+}
+
+// 11. Check clipboard API support
+console.log(!!navigator.clipboard);
+
+// 12. Get media devices (camera/microphone)
+const devices = await navigator.mediaDevices.enumerateDevices();
+console.log(devices);
+
+// 13. Vibrate device (supported devices only)
+navigator.vibrate?.(200);
+
+// 14. Check hardware concurrency (logical CPU count)
+console.log(navigator.hardwareConcurrency);
+
+
+--->
+async function handleCopy() {
+        const inviteLink = `${window.location.origin}/join/${joinCode}`;
+        await navigator.clipboard.writeText(inviteLink);
+        toast.add({
+            title: 'Link copied to clipboard',
+            type: 'success'
+        });
+  }

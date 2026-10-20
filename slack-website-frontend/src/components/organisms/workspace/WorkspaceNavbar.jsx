@@ -3,16 +3,26 @@ import { useParams } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { useGetWorkspaceById } from '@/hooks/workspace/useGetWorkspaceById';
+import { useCurrentWorkspace } from '@/hooks/context/useCurrentWorkspace';
+import { useEffect } from 'react';
 
 export const WorkspaceNavbar = () => {
 
     const { workspaceId } = useParams();
-
     const { isFetching, workspace } = useGetWorkspaceById(workspaceId);
+    const {setCurrentWorkspace}=useCurrentWorkspace()
+
+    useEffect(()=>{
+        if(workspace){
+            setCurrentWorkspace(workspace)
+        }
+    },[workspace,setCurrentWorkspace])
+
 
     if(isFetching) {
         return <LucideLoader2 className="animate-spin ml-2" />;
     }
+
 
     return (
         <nav

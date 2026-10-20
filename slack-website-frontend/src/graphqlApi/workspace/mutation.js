@@ -40,6 +40,43 @@ mutation deleteWorkspace($workspaceId:Int!){
 }
 `
 
-export { CREATE_WORKSPACE ,UPDATE_WORKSPACE,DELETE_WORKSPACE};
+const ADD_CHANNEL_TO_WORKSPACE=gql`
+mutation AddChannelToWorkspace(
+  $workspaceId: Int!
+  $channelName: String!
+) {
+  addChannelToWorkspace(
+    workspaceId: $workspaceId
+    channelName: $channelName
+  ) {
+    success
+    message
+    data {
+      id
+      name
+      description
+      joinCode
+      createdAt
+    }
+  }
+}
+
+`
+
+const RESET_JOIN_CODE=gql`
+mutation ResetJoinCode($workspaceId:Int!){
+    resetJoinCodeController(workspaceId:$workspaceId){
+    success
+    message
+    data{
+    id
+    name
+    joinCode
+    }
+}
+}
+`
+
+export { CREATE_WORKSPACE ,UPDATE_WORKSPACE,DELETE_WORKSPACE,ADD_CHANNEL_TO_WORKSPACE,RESET_JOIN_CODE};
 
 
