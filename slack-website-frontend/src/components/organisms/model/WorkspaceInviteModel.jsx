@@ -1,4 +1,4 @@
-import { CopyIcon, RefreshCcwIcon } from 'lucide-react';
+import { CopyIcon, RefreshCcwIcon, Target } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -6,12 +6,12 @@ import { toast } from '@/components/ui/toast';
 import { useCurrentWorkspace } from '@/hooks/context/useCurrentWorkspace';
 import { useResetJoinCode } from '@/hooks/workspace/useResetJoinCode';
 
-export const WorkspaceInviteModal = ({ openInviteModal, setOpenInviteModal, workspaceName, joinCode }) => {
+export const WorkspaceInviteModal = ({ openInviteModal, setOpenInviteModal, workspaceName, joinCode,workspaceId }) => {
     const { currentWorkspace } = useCurrentWorkspace();
     const { resetJoinCodeMutation, isPending } = useResetJoinCode(currentWorkspace?.id);
 
     async function handleCopy() {
-        const inviteLink = `${window.location.origin}/join/${joinCode}`;
+        const inviteLink = `${joinCode}`;
         await navigator.clipboard.writeText(inviteLink);
         toast.add({
             title: 'Link copied to clipboard',
@@ -49,7 +49,15 @@ export const WorkspaceInviteModal = ({ openInviteModal, setOpenInviteModal, work
                         Copy Link
                         <CopyIcon className='size-4 ml-2' />
                     </Button>
-                </div>
+                    <a
+                     href={`/workspaces/join/${workspaceId}`}
+                     target="_blank"
+                     rel="noreferrer"
+                      className="text-blue-500"
+>
+  Redirect to join page
+</a>
+                     </div>
                 <div
                     className='flex items-center justify-center w-full'
                 >

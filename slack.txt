@@ -1937,3 +1937,78 @@ async function handleCopy() {
             type: 'success'
         });
   }
+
+--->
+  react-verification-input is a React library used to create OTP / verification code input fields, such as 4-digit or 6-digit codes.
+1. Install
+npm install react-verification-input
+
+import VerificationInputModule from 'react-verification-input';
+const VerificationInput = VerificationInputModule.default ?? VerificationInputModule;
+
+
+
+2. Example
+import VerificationInput from "react-verification-input";
+
+export default function OTPInput() {
+  return (
+    <VerificationInput
+      length={6}
+      placeholder=""
+      onChange={(value) => console.log(value)}
+      onComplete={(value) => console.log("OTP:", value)}
+    />
+  );
+}
+
+
+3. Important props
+- length → Number of OTP digits.
+- placeholder → Placeholder character.
+- onChange → Runs when the input changes.
+- onComplete → Runs when all digits are entered.
+- classNames → Customize the input's CSS classes.
+Remember: This library collects the OTP; you still need to verify the code with your backend.
+
+--->
+rel="noreferrer" tells the browser not to send the current page's URL as referrer information when opening the link.
+<a
+  href="/workspaces/join/123"
+  target="_blank"
+  rel="noreferrer"
+>
+  Join Workspace
+</a>
+
+
+Short notes:
+- target="_blank" → Opens the link in a new tab.
+- rel="noreferrer" → Hides the referring page's URL from the destination website.
+- It also implies noopener in modern browsers, preventing the opened page from accessing the original page through window.opener.
+Remember: Use rel="noreferrer" with target="_blank" when you don't want to share referrer information.
+
+Referrer information is the URL of the page from which a user came.
+Example
+You are on this page:
+https://myapp.com/workspaces/123
+
+
+You click a link that opens:
+https://otherwebsite.com
+
+
+- Without rel="noreferrer": The destination website may receive the previous page's
+ URL as referrer information.
+- With rel="noreferrer": The browser does not send that referrer URL.
+<a
+  href="https://otherwebsite.com"
+  target="_blank"
+  rel="noreferrer"
+>
+  Open website
+</a>
+
+
+Remember: Referrer information tells a website where the visitor came from,
+ not the visitor's identity.

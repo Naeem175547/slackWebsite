@@ -117,7 +117,7 @@ export class WorkspaceResolver {
 
   }
   @Mutation(()=>WorkspaceMemberResponse)
-  joinWorkspace(@Args('workspaceId') workspaceId:number,@Args('joinCode') joinCode:string,@Context() context:any){
+  joinWorkspace(@Args('workspaceId',{type:()=>Int}) workspaceId:number,@Args('joinCode') joinCode:string,@Context() context:any){
     const userId=context.req.user.id;
     return this.workspaceService.joinWorkspaceService(workspaceId,joinCode,userId)
 

@@ -8,6 +8,7 @@ import { SigninContainer } from './components/organisms/Auth/SigninContainer';
 import { ProtectedRoute } from './components/molecules/ProtectedRoute';
 import Home from './pages/Home/Home';
 import { WorkspaceLayout } from './pages/workspace/layout';
+import { JoinPage } from './pages/workspace/joinPage';
 
 export default function AppRoutes() {
   return (
@@ -49,6 +50,12 @@ export default function AppRoutes() {
             element={<ProtectedRoute>Channel</ProtectedRoute>}
 
           />
+        <Route
+        path='/workspaces/join/:workspaceId' element={<JoinPage/>}
+        />
+        <Route 
+            path="/workspaces/:workspaceId/channels/:channelId"
+            element={<ProtectedRoute><WorkspaceLayout><Channel /></WorkspaceLayout></ProtectedRoute>} />
 
       <Route path="/*" element={<NotFound />} />
     </Routes>

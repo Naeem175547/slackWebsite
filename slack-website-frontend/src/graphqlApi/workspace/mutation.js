@@ -77,6 +77,40 @@ mutation ResetJoinCode($workspaceId:Int!){
 }
 `
 
-export { CREATE_WORKSPACE ,UPDATE_WORKSPACE,DELETE_WORKSPACE,ADD_CHANNEL_TO_WORKSPACE,RESET_JOIN_CODE};
+const ADD_MEMBER_TO_WORKSPACE=gql`
+mutation AddMemberToWorkspace($workspaceId:Int!,$memberId:Int!){
+    addMemberToWorkspace(workspaceId:$workspaceId,memberId:$memberId){
+    success
+    message
+    data{
+    id
+    role
+    user{
+    id
+    name
+    }
+    }
+}
+}
+`
+
+const JOIN_WORKSPACE=gql`
+mutation JoinWorkspace($workspaceId:Int!,$joinCode:String!){
+    joinWorkspace(workspaceId:$workspaceId,joinCode:$joinCode){
+    success
+    message
+    data{
+    id
+    role
+    user{
+    id
+    name
+    }
+    }
+}
+}
+`
+
+export { CREATE_WORKSPACE ,UPDATE_WORKSPACE,DELETE_WORKSPACE,ADD_CHANNEL_TO_WORKSPACE,RESET_JOIN_CODE,ADD_MEMBER_TO_WORKSPACE,JOIN_WORKSPACE};
 
 
