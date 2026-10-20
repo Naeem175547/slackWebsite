@@ -9,8 +9,9 @@ import {
   WorkspaceMember,
   WorkspaceMemberResponse,
 } from './dto/workspace.member.type.js';
-@UseGuards(AuthGuards)
+
 @Resolver()
+@UseGuards(AuthGuards)
 export class WorkspaceResolver {
   constructor(private readonly workspaceService: WorkspaceService) {}
   @Mutation(() => WorkspaceResponse)
@@ -107,5 +108,11 @@ export class WorkspaceResolver {
       channelName,
       userId,
     );
+  }
+  @Mutation(()=>WorkspaceResponse)
+  resetJoinCodeController(@Args('workspaceId',{type:()=>Int}) workspaceId:number,@Context() context:any ){
+    const userId=context.req.user.id;
+    return this.workspaceService.resetWorkspaceJoinCodeService(workspaceId,userId); 
+
   }
 }

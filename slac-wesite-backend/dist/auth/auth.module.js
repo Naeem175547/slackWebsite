@@ -8,6 +8,7 @@ import { Global, Module } from '@nestjs/common';
 import { AuthResolver } from './auth.resolver.js';
 import { AuthService } from './auth.service.js';
 import { JwtModule } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { UserModule } from '../user/user.module.js';
 let AuthModule = class AuthModule {
 };
@@ -16,9 +17,12 @@ AuthModule = __decorate([
     Module({
         imports: [
             UserModule,
-            JwtModule.register({
-                secret: process.env.JWT_SECRET || 'default_secret_key',
-                signOptions: { expiresIn: '1h' },
+            JwtModule.registerAsync({
+                inject: [ConfigService],
+                useFactory: (configService) => ({
+                    secret: configService.getOrThrow('JWT_SECRET'),
+                    signOptions: { expiresIn: '1h' },
+                }),
             }),
         ],
         providers: [AuthResolver, AuthService],

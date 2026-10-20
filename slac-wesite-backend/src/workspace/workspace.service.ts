@@ -410,4 +410,10 @@ export class WorkspaceService {
       });
     }
   }
+  async resetWorkspaceJoinCodeService(worksapceId:number,userId:number){
+      const newJoinCode=uuidv4().substring(0,6).toUpperCase();
+      const updatedWorkspace=await this.UpdateWorkspaceService(worksapceId,{joinCode:newJoinCode},userId)
+      return updatedWorkspace;
+
+  }
 }

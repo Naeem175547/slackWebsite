@@ -12,4 +12,9 @@ export class UpdateWorkspaceInput {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  joinCode?: string;
 }

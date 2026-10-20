@@ -1512,3 +1512,316 @@ Rule for writing good code.
 
 -->
 initail error handling is must be done in hook  like error, complete for mutation.
+--->
+# CVA (Class Variance Authority)
+
+## 1. What is CVA?
+
+CVA stands for Class Variance Authority.
+
+It is a JavaScript library used to manage CSS classes based on different variants or options.
+
+For example, a button can have different styles:
+- Primary
+- Secondary
+- Danger
+- Outline
+
+CVA helps us define these styles in one place and select them using props.
+
+## 2. Installation
+
+```bash
+npm install class-variance-authority
+```
+
+## 3. Basic Syntax
+
+```jsx
+import { cva } from "class-variance-authority";
+
+const buttonVariants = cva(
+  "px-4 py-2 rounded-md font-medium",
+  {
+    variants: {
+      variant: {
+        primary: "bg-blue-600 text-white",
+        secondary: "bg-gray-200 text-black",
+        danger: "bg-red-600 text-white",
+      },
+      size: {
+        small: "text-sm",
+        large: "text-lg",
+      },
+    },
+
+    defaultVariants: {
+      variant: "primary",
+      size: "small",
+    },
+  }
+);
+```
+
+## 4. Understanding Each Part
+
+### A. Base Classes
+
+```jsx
+cva("px-4 py-2 rounded-md font-medium", ...)
+```
+
+These classes are applied to every button, regardless of its variant or size.
+
+### B. Variants
+
+```jsx
+variants: {
+  variant: {
+    primary: "bg-blue-600 text-white",
+    secondary: "bg-gray-200 text-black",
+  },
+}
+```
+
+`variants` defines the available styling options.
+
+Here:
+- `variant` is the name of the variant group.
+- `primary` and `secondary` are the available options.
+- The strings contain the CSS classes for each option.
+
+### C. Multiple Variant Groups
+
+```jsx
+variants: {
+  variant: {
+    primary: "bg-blue-600 text-white",
+    danger: "bg-red-600 text-white",
+  },
+  size: {
+    small: "text-sm px-2 py-1",
+    large: "text-lg px-6 py-3",
+  },
+}
+```
+
+We can define multiple independent variant groups, such as `variant` and `size`.
+
+### D. Default Variants
+
+```jsx
+defaultVariants: {
+  variant: "primary",
+  size: "small",
+}
+```
+
+These options are used when the caller does not provide a value for those variants.
+
+## 5. How to Use CVA
+
+CVA returns a function that generates class names.
+
+```jsx
+buttonVariants({
+  variant: "primary",
+  size: "large",
+});
+```
+
+The result contains the base classes plus the selected primary and large classes.
+
+For example:
+
+```jsx
+<button
+  className={buttonVariants({
+    variant: "primary",
+    size: "large",
+  })}
+>
+  Submit
+</button>
+```
+
+Output: a blue button with white text and large text sizing.
+
+## 6. Complete React Example
+
+```jsx
+import { cva } from "class-variance-authority";
+
+const buttonVariants = cva(
+  "rounded-md font-medium",
+  {
+    variants: {
+      variant: {
+        primary: "bg-blue-600 text-white",
+        secondary: "bg-gray-200 text-black",
+        danger: "bg-red-600 text-white",
+      },
+      size: {
+        small: "px-2 py-1 text-sm",
+        medium: "px-4 py-2 text-base",
+        large: "px-6 py-3 text-lg",
+      },
+    },
+    defaultVariants: {
+      variant: "primary",
+      size: "medium",
+    },
+  }
+);
+
+function Button({
+  variant,
+  size,
+  children,
+}) {
+  return (
+    <button
+      className={buttonVariants({ variant, size })}
+    >
+      {children}
+    </button>
+  );
+}
+
+export default function App() {
+  return (
+    <div className="flex gap-3">
+      <Button variant="primary" size="medium">
+        Save
+      </Button>
+
+      <Button variant="secondary" size="small">
+        Cancel
+      </Button>
+
+      <Button variant="danger" size="large">
+        Delete
+      </Button>
+    </div>
+  );
+}
+```
+
+## 7. What Happens Internally?
+
+When we call:
+
+```jsx
+buttonVariants({
+  variant: "danger",
+  size: "large",
+});
+```
+
+CVA performs these steps:
+
+1. Reads the base classes.
+2. Finds the classes associated with `variant: "danger"`.
+3. Finds the classes associated with `size: "large"`.
+4. Combines all the applicable classes into a class-name string.
+5. Returns the string for use in `className`.
+
+## 8. What Is `compoundVariants`?
+
+`compoundVariants` applies additional classes when multiple variant conditions match.
+
+Example:
+
+```jsx
+const buttonVariants = cva("rounded-md", {
+  variants: {
+    variant: {
+      primary: "bg-blue-600",
+      danger: "bg-red-600",
+    },
+    size: {
+      small: "text-sm",
+      large: "text-lg",
+    },
+  },
+
+  compoundVariants: [
+    {
+      variant: "primary",
+      size: "large",
+      className: "font-bold",
+    },
+  ],
+});
+```
+
+Here, `font-bold` is applied only when both conditions are true:
+
+```jsx
+buttonVariants({
+  variant: "primary",
+  size: "large",
+});
+```
+
+## 9. What Is `className` for?
+
+You can pass additional classes when generating variants:
+
+```jsx
+buttonVariants({
+  variant: "primary",
+  size: "large",
+  className: "w-full",
+});
+```
+
+The `w-full` class is added to the generated classes.
+
+## 10. What Is the Difference Between CVA and `cn()`?
+
+- `cva()` defines reusable styling rules and variants.
+- The function returned by `cva()` generates classes for the selected variants.
+- `cn()` is a separate utility commonly used to combine classes and, depending on its implementation, resolve conflicting Tailwind classes.
+
+Example:
+
+```jsx
+import { cva } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+
+const buttonVariants = cva("rounded-md", {
+  variants: {
+    variant: {
+      primary: "bg-blue-600 text-white",
+      secondary: "bg-gray-200 text-black",
+    },
+  },
+});
+
+<button
+  className={cn(
+    buttonVariants({ variant: "primary" }),
+    "w-full"
+  )}
+>
+  Save
+</button>
+```
+
+## 11. Important Points to Remember
+
+1. CVA stands for Class Variance Authority.
+2. CVA does not create React components; it generates class names.
+3. Base classes apply to every variant.
+4. `variants` defines available styling choices.
+5. `defaultVariants` specifies default choices.
+6. `compoundVariants` handles combinations of variant conditions.
+7. CVA works with Tailwind CSS, regular CSS class names, and other class-name systems.
+8. CVA does not automatically merge conflicting Tailwind classes; a utility such as `tailwind-merge` can help.
+9. CVA can also be used outside React because it is a JavaScript library.
+
+**One-line summary:** CVA lets us define reusable CSS styles once and dynamically select the appropriate classes through options such as `variant` and `size`.
+
+
+--->
