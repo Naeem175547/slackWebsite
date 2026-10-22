@@ -4,11 +4,13 @@ import { AuthService } from './auth.service.js';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UserModule } from '../user/user.module.js';
+import { RabbitmqModule } from '../rabbitmq/rabbitmq.module.js';
 
 @Global()
 @Module({
   imports: [
     UserModule,
+    RabbitmqModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({

@@ -10,6 +10,9 @@ type User {
   avatar: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+  isVarified: Boolean!
+  token: String!
+  tokenExpiryDate: DateTime!
 }
 
 """
@@ -139,11 +142,12 @@ type Mutation {
   updateUser(id: Int!, updateUserInput: UpdateUserInput!): UserResponse!
   removeUser(id: Int!): UserResponse!
   signUp(createUserInput: CreateUserInput!): UserResponse!
+  verifyToken(token: String!): Boolean!
   signIn(email: String!, password: String!): LoginResponse!
   createWorkspace(createWorkspaceInput: CreateWorkspaceInput!): WorkspaceResponse!
   deleteWorkspace(workspaceId: Int!): WorkspaceResponse!
   UpdateWorkspace(workspaceId: Int!, updateWorkspaceInput: UpdateWorkspaceInput!): WorkspaceResponse!
-  addMemberToWorkspace(workspaceId: Float!, memberId: Float!): WorkspaceMemberResponse!
+  addMemberToWorkspace(workspaceId: Int!, memberId: Int!): WorkspaceMemberResponse!
   addChannelToWorkspace(workspaceId: Int!, channelName: String!): WorkspaceResponse!
   resetJoinCodeController(workspaceId: Int!): WorkspaceResponse!
   joinWorkspace(workspaceId: Int!, joinCode: String!): WorkspaceMemberResponse!

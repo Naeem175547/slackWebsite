@@ -86,8 +86,8 @@ export class WorkspaceResolver {
   @Mutation(() => WorkspaceMemberResponse)
   addMemberToWorkspace(
     @Context() context: any,
-    @Args('workspaceId') workspaceId: number,
-    @Args('memberId') memberId: number,
+    @Args('workspaceId', { type: () => Int }) workspaceId: number,
+    @Args('memberId', { type: () => Int }) memberId: number,
   ) {
     const userId = context.req.user.id;
     return this.workspaceService.addMemberToWorkspaceService(

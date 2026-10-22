@@ -128,8 +128,8 @@ __decorate([
 __decorate([
     Mutation(() => WorkspaceMemberResponse),
     __param(0, Context()),
-    __param(1, Args('workspaceId')),
-    __param(2, Args('memberId')),
+    __param(1, Args('workspaceId', { type: () => Int })),
+    __param(2, Args('memberId', { type: () => Int })),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Number, Number]),
     __metadata("design:returntype", void 0)

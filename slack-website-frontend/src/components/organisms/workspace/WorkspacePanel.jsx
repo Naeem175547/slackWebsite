@@ -70,7 +70,7 @@ export const WorkspacePanel = () => {
                 onIconClick={() => {}}
             >
                 {workspace?.members?.map((item) => {
-                    return <UserItem key={item.memberId.id} label={item.memberId.username} id={item.memberId.id} image={item.memberId.avatar} />;
+                    return <UserItem key={item.user.id} label={item.user.name} id={item.user.id} image={item.user.avatar} />;
                 })}
             </WorkspacePanelSection>
         </div>

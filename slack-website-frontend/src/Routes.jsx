@@ -9,6 +9,7 @@ import { ProtectedRoute } from './components/molecules/ProtectedRoute';
 import Home from './pages/Home/Home';
 import { WorkspaceLayout } from './pages/workspace/layout';
 import { JoinPage } from './pages/workspace/joinPage';
+import Channel from './pages/workspace/channel/channel';
 
 export default function AppRoutes() {
   return (

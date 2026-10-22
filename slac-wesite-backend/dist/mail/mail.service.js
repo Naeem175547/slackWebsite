@@ -23,6 +23,7 @@ let MailService = class MailService {
         });
     }
     async sendMail(to, subject, body) {
+        console.log("mail has been sent-------------------------- ");
         return await this.transporter.sendMail({
             from: process.env.MAIL_FROM || process.env.MAIL_USER,
             to,

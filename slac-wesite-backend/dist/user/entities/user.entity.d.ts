@@ -12,5 +12,8 @@ export declare class UserEntity {
     workspaceMembers: Relation<WorkspaceMemberEntity>[];
     createdAt: Date;
     updatedAt: Date;
-    generateAvatar(): void;
+    isVarified: boolean;
+    token: string | null;
+    tokenExpiryDate: Date | null;
+    generate(): void;
 }

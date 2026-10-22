@@ -10,6 +10,7 @@ import { AuthService } from './auth.service.js';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UserModule } from '../user/user.module.js';
+import { RabbitmqModule } from '../rabbitmq/rabbitmq.module.js';
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
@@ -17,6 +18,7 @@ AuthModule = __decorate([
     Module({
         imports: [
             UserModule,
+            RabbitmqModule,
             JwtModule.registerAsync({
                 inject: [ConfigService],
                 useFactory: (configService) => ({

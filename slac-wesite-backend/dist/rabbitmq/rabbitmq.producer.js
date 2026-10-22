@@ -18,6 +18,7 @@ let RabbitMqProducer = class RabbitMqProducer {
         this.rabbitmq = rabbitmq;
     }
     sendMail(to, subject, body) {
+        console.log('mail emiting triger----------------');
         this.rabbitmq.emit('sendMail', {
             to,
             subject,

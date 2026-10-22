@@ -18,15 +18,36 @@ import { GraphQLError } from 'graphql';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from './auth.service.js';
 import { LoginResponse } from './dto/login.response.type.js';
+import { ENABLE_EMAIL_VERIFICATION } from '../config/serverConfig.js';
+import { RabbitMqProducer } from '../rabbitmq/rabbitmq.producer.js';
+import { verifyEmailMail } from '../common/utils/mailObject.js';
 let AuthResolver = class AuthResolver {
     userService;
     authService;
-    constructor(userService, authService) {
+    rabbitmqProducer;
+    constructor(userService, authService, rabbitmqProducer) {
         this.userService = userService;
         this.authService = authService;
+        this.rabbitmqProducer = rabbitmqProducer;
     }
-    signUp(createUserInput) {
-        return this.userService.create(createUserInput);
+    async signUp(createUserInput) {
+        try {
+            const user = await this.userService.create(createUserInput);
+            if (ENABLE_EMAIL_VERIFICATION) {
+                if (!user.token) {
+                    throw new GraphQLError('token missing...');
+                }
+                const mail = verifyEmailMail(user.token);
+                this.rabbitmqProducer.sendMail(user.email, mail.subject, mail.text);
+            }
+            return user;
+        }
+        catch (error) {
+            throw new GraphQLError('user creation failed...');
+        }
+    }
+    async verifyToken(token) {
+        return this.authService.verifyToken(token);
     }
     async signIn(email, password) {
         const user = await this.userService.findOneByEmail(email);
@@ -59,8 +80,15 @@ __decorate([
     __param(0, Args('createUserInput')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [CreateUserInput]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], AuthResolver.prototype, "signUp", null);
+__decorate([
+    Mutation(() => Boolean),
+    __param(0, Args('token', { type: () => String })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AuthResolver.prototype, "verifyToken", null);
 __decorate([
     Mutation(() => LoginResponse),
     __param(0, Args('email')),
@@ -72,7 +100,8 @@ __decorate([
 AuthResolver = __decorate([
     Resolver(),
     __metadata("design:paramtypes", [UserService,
-        AuthService])
+        AuthService,
+        RabbitMqProducer])
 ], AuthResolver);
 export { AuthResolver };
 //# sourceMappingURL=auth.resolver.js.map

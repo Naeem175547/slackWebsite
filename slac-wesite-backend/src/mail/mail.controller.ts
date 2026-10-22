@@ -7,6 +7,8 @@ export class MailController {
   constructor(private mailService: MailService) {}
   @EventPattern('sendMail')
   sendMail(@Payload() payload: any) {
+    console.log('now mal success fully trigger')    
     return this.mailService.sendMail(payload.to, payload.subject, payload.body);
+    
   }
 }

@@ -34,6 +34,7 @@ const FETCH_WORKSPACE_BY_ID = gql`
           user {
             id
             name
+            avatar
           }
         }
       }

@@ -19,6 +19,7 @@ let MailController = class MailController {
         this.mailService = mailService;
     }
     sendMail(payload) {
+        console.log('now mal success fully trigger');
         return this.mailService.sendMail(payload.to, payload.subject, payload.body);
     }
 };

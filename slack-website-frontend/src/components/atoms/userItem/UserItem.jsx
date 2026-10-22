@@ -1,8 +1,7 @@
-import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { cva } from 'class-variance-authority';
 import { Link } from 'react-router-dom';
 
-import { Avatar } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useCurrentWorkspace } from '@/hooks/context/useCurrentWorkspace';
 import { cn } from '@/lib/utils';
@@ -16,7 +15,9 @@ const userItemVariants = cva(
                 active: 'text-[#481350] bg-white/90 hover:bg-white/80'
             }
         },
-        defaultVariants: 'default'
+        defaultVariants: {
+            variant: 'default'
+        }
     }
 );
 
@@ -27,16 +28,15 @@ export const UserItem = ({
     variant
 }) => {
     console.log('incoming label', label);
-    const { workspace } = useCurrentWorkspace();
+    const { currentWorkspace } = useCurrentWorkspace();
 
     return (
         <Button
             className={cn(userItemVariants({variant}))}
             variant="transparent"
             size="sm"
-            asChild
         >
-            <Link to={`/workspace/${workspace?._id}/members/${id}`}>
+            <Link to={`/workspaces/${currentWorkspace?.id}/members/${id}`}>
                 <Avatar>
                     <AvatarImage src={image} className='rounded-md' />
                     <AvatarFallback
