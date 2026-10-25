@@ -2012,3 +2012,213 @@ https://otherwebsite.com
 
 Remember: Referrer information tells a website where the visitor came from,
  not the visitor's identity.
+
+ -->
+ import { useApolloClient } from "@apollo/client/react";
+import { GET_CHANNELS_by_USER_ID } from "@/graphqlApi/channel/query";
+
+export function useGetChannelById() {
+    const client = useApolloClient();
+
+    const getChannelById = async (channelId) => {
+        try {
+            const { data } = await client.query({
+                query: GET_CHANNELS_by_USER_ID,
+                variables: { channelId },
+                fetchPolicy: "network-only",
+            });
+
+            return data;
+        } catch (error) {
+            console.error("Error fetching channel:", error);
+            throw error;
+        }
+    };
+
+    return { getChannelById };
+}
+
+
+---->
+# Quill Text Editor — Practical Notes
+
+## 1. What is Quill?
+Quill is a rich-text editor used to write formatted content like bold text, headings, lists, and links.
+
+## 2. Installation
+```bash
+npm install quill
+```
+
+## 3. Basic Setup (React)
+```jsx
+import { useEffect, useRef } from "react";
+import Quill from "quill";
+import "quill/dist/quill.snow.css";
+
+export default function TextEditor() {
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    const quill = new Quill(editorRef.current, {
+      theme: "snow",
+      modules: {
+        toolbar: [
+          ["bold", "italic", "underline"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["link"]
+        ]
+      }
+    });
+
+    return () => {
+      quillRef.current = null;
+    };
+  }, []);
+
+  return <div ref={editorRef} />;
+}
+```
+
+## 4. Get Content
+
+```javascript
+// Plain text
+quill.getText();
+
+// Structured Delta JSON
+quill.getContents();
+
+// HTML
+quill.root.innerHTML;
+```
+
+## 5. Set Content
+
+```javascript
+quill.setText("Hello World");
+```
+
+## 6. Detect Changes
+
+```javascript
+quill.on("text-change", () => {
+  console.log(quill.getContents());
+});
+```
+
+## 7. Important Options
+
+```javascript
+new Quill("#editor", {
+  theme: "snow",
+  readOnly: false,
+  placeholder: "Write something...",
+  modules: {
+    toolbar: true
+  }
+});
+```
+
+- `snow` — editor with toolbar styling.
+- `bubble` — floating formatting toolbar.
+- `readOnly` — prevents editing when `true`.
+- `placeholder` — displays hint text.
+- `toolbar` — enables formatting controls.
+
+## 8. Save Content to Backend
+
+```javascript
+const content = quill.root.innerHTML;
+
+await fetch("/api/articles", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ content })
+});
+```
+
+Sanitize HTML before rendering user-generated content.
+
+## 9. Quick Revision
+- `getText()` → plain text.
+- `getContents()` → Delta JSON.
+- `setContents()` → set formatted content.
+- `innerHTML` → HTML content.
+- `innerText -> Text content
+- `text-change` → listen for editor changes.
+
+
+--->
+quill.getSelection() returns //the user's current text selection or cursor position in the Quill editor.
+const range = quill.getSelection();
+console.log(range);
+
+
+Example output:
+{
+  index: 5,
+  length: 3
+}
+
+- index → starting position of the selection.
+- length → number of selected characters.
+- length: 0 → cursor position only.
+- null → editor is not focused or has no current selection.
+Example:
+const range = quill.getSelection();
+if (range) {
+  console.log("Selected text:", quill.getText(range.index, range.length));
+}
+
+
+This retrieves the selected text from the editor.
+
+learn more from quill editor website
+
+--->
+```js
+const container = containerRef.current;
+
+const editorContainer = container.appendChild(
+  container.ownerDocument.createElement('div')
+);
+```
+
+**1. `containerRef.current`**
+Gets the actual DOM element stored in the React ref.
+
+**2. `container.ownerDocument`**
+Gets the document (`document`) that owns the container element.
+
+**3. `createElement('div')`**
+Creates a new, empty `<div>` element.
+
+**4. `appendChild()`**
+Adds the newly created div inside the container.
+
+**5. `editorContainer`**
+Stores the newly created div that was appended to the container not the container.
+
+**Example:**
+
+Before:
+```html
+<div id="container"></div>
+```
+
+After:
+```html
+<div id="container">
+  <div></div>
+</div>
+```
+
+**In short:** Get the container → create a div → append it inside the container → store the new div for Quill.
+
+Why not just use document.createElement('div')?
+You can! For a normal webpage, both usually work the same way.
+container.ownerDocument is useful when your container belongs to another document, such as an iframe.
+Remember: ownerDocument finds the document; it does not create a div or append anything by itself.

@@ -76,7 +76,7 @@ __decorate([
     __metadata("design:type", Boolean)
 ], UserEntity.prototype, "isVarified", void 0);
 __decorate([
-    Column({ nullable: true }),
+    Column({ type: 'varchar', length: 255, nullable: true }),
     __metadata("design:type", Object)
 ], UserEntity.prototype, "token", void 0);
 __decorate([

@@ -124,7 +124,7 @@ type Query {
   userByEmail(email: String!): UserResponse!
   userByUsername(username: String!): UserResponse!
   getPaginatedMessage(messageParams: MessageParams!, page: Int, limit: Int): MessageResponse!
-  getChannelById(channelId: Float!): FullChannelResponse!
+  getChannelById(channelId: Int!): FullChannelResponse!
   fetchWorkspaces: WorkspacesResponse!
   getWorkspacesOfUserByMember: WorkspacesResponse!
   getWorkSpace(workspaceId: Int!): WorkspaceResponse!

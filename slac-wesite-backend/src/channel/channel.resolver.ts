@@ -1,4 +1,4 @@
-import { Args, Context, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Int, Query, Resolver } from '@nestjs/graphql';
 
 import { FullChannelResponse } from './types/channel.type.js';
 import { ChannelService } from './channel.service.js';
@@ -12,7 +12,7 @@ export class ChannelResolver {
 
   @Query(() => FullChannelResponse)
   getChannelById(
-    @Args('channelId') channelId: number,
+    @Args('channelId',{type:()=>Int!}) channelId: number,
     @Context() context: any,
   ) {
     const userId = context.req.user.id;

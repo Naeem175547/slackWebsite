@@ -46,17 +46,12 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
-       <Route 
-            path="/workspaces/:workspaceId/channels/:channelId"
-            element={<ProtectedRoute>Channel</ProtectedRoute>}
-
-          />
-        <Route
+              <Route
         path='/workspaces/join/:workspaceId' element={<JoinPage/>}
         />
         <Route 
             path="/workspaces/:workspaceId/channels/:channelId"
-            element={<ProtectedRoute><WorkspaceLayout><Channel /></WorkspaceLayout></ProtectedRoute>} />
+            element={<ProtectedRoute><WorkspaceLayout><Channel/></WorkspaceLayout></ProtectedRoute>} />
 
       <Route path="/*" element={<NotFound />} />
     </Routes>

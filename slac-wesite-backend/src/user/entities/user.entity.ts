@@ -51,7 +51,7 @@ export class UserEntity {
   @Column({default:false})
   isVarified:boolean
 
-  @Column({nullable:true})
+  @Column({type:'varchar',length:255,nullable:true})
   token:string | null
 
   @Column({ type: 'datetime', nullable: true })
