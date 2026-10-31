@@ -1,8 +1,9 @@
-import { Button } from "@base-ui/react";
-import { Icon, ImageIcon, LucideChartCandlestick, LucideToggleLeft, ToggleLeft, ToggleRight, ToggleRightIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Icon, ImageIcon, LucideChartCandlestick, LucideToggleLeft, MessageSquareDashedIcon, MousePointerSquareDashedIcon, ToggleLeft, ToggleRight, ToggleRightIcon } from "lucide-react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import { useEffect, useRef, useState } from "react";
+import { MdSend } from "react-icons/md";
 import { Hint } from "@/components/atoms/Hint/Hint";
 
 
@@ -26,6 +27,10 @@ export const Editor = ({
     const submitRef = useRef(null);
     const defaultValueRef = useRef(defaultValue);
     const placeholderRef = useRef(placeholder);
+
+    useEffect(() => {
+        submitRef.current = onSubmit;
+    });
 
       function toggleToolbar() {
         setIsToolbarvisible(!isToolbarVisible);
@@ -61,7 +66,11 @@ export const Editor = ({
                     bindings: {
                         enter: {
                             key: "Enter",
-                            handler: () => false
+                            shiftKey: false,
+                            handler: () => {
+                                submitRef.current?.({ body: JSON.stringify(quill.getContents()) });
+                                return false;
+                            }
                         },
 
                         shift_enter: {
@@ -117,7 +126,24 @@ export const Editor = ({
                         >
                             <ImageIcon className='size-4' />
                         </Button>
+
                     </Hint>
+
+                    
+                    <div className="ml-auto">
+                        <Hint label="Send Message">
+                            <Button
+                                size="iconSm"
+                                className="bg-[#007a6a] hover:bg-[#007a6a]/80 text-white"
+                                onClick={() => {
+                                    onSubmit({ body: JSON.stringify(quillRef.current?.getContents()) });
+                                }}
+                                disabled={false}
+                            >
+                                <MdSend className='size-4' />
+                            </Button>
+                        </Hint>
+                    </div>
                 </div>
             </div>
 
