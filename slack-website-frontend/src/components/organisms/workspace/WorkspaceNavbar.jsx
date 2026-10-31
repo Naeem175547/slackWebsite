@@ -5,18 +5,33 @@ import { Button } from '@/components/ui/button';
 import { useGetWorkspaceById } from '@/hooks/workspace/useGetWorkspaceById';
 import { useCurrentWorkspace } from '@/hooks/context/useCurrentWorkspace';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/context/useAuth';
 
 export const WorkspaceNavbar = () => {
 
     const { workspaceId } = useParams();
-    const { isFetching, workspace } = useGetWorkspaceById(workspaceId);
-    const {setCurrentWorkspace}=useCurrentWorkspace()
+    const navigate = useNavigate();
+    const { logout } = useAuth();
+    const { isFetching, workspace, error, isSuccess } = useGetWorkspaceById(workspaceId);
+    const { setCurrentWorkspace } = useCurrentWorkspace();
 
-    useEffect(()=>{
-        if(workspace){
-            setCurrentWorkspace(workspace)
+    useEffect(() => {
+        
+        if(!isFetching && !isSuccess && error) {
+            console.log('Error fetching workspace', error.status);
+            if(error.status === 403) {
+                logout();
+                navigate('/auth/signin');
+            }
         }
-    },[workspace,setCurrentWorkspace])
+        
+        if(workspace) {
+            setCurrentWorkspace(workspace);
+        }
+
+
+    }, [workspace, setCurrentWorkspace, isSuccess, error, isFetching]);
 
 
     if(isFetching) {
