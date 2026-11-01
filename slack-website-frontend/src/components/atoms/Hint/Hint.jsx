@@ -4,9 +4,7 @@ export const Hint = ({ align, side, label, children }) => {
     return (
         <TooltipProvider>
             <Tooltip delayDuration={50}>
-                <TooltipTrigger asChild>
-                    {children}
-                </TooltipTrigger>
+                <TooltipTrigger render={children} />
                 <TooltipContent
                     side={side}
                     align={align}

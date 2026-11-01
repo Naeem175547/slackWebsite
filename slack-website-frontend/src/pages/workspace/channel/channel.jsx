@@ -35,6 +35,7 @@ export default function Channel() {
       <div className="flex flex-col h-full">
         <div className="flex-1">
           <ChannelHeader name={channelsDetails?.name} />
+          <div  className="flex-1"/>
           <ChatInput/>
 
         </div>
