@@ -2222,3 +2222,223 @@ Why not just use document.createElement('div')?
 You can! For a normal webpage, both usually work the same way.
 container.ownerDocument is useful when your container belongs to another document, such as an iframe.
 Remember: ownerDocument finds the document; it does not create a div or append anything by itself.
+
+--->
+To integrate Razorpay payment gateway into your website, you'll need to configure Razorpay on the backend and frontend.
+
+Since you're working with React and NestJS, I'll explain the integration using:
+- Frontend: React
+- Backend: NestJS
+- Payment gateway: Razorpay
+- Currency: INR (₹)
+The important thing is that payment verification must happen on your backend, not just on the frontend.
+1. Create a Razorpay account
+1. Visit Razorpay Dashboard.
+2. Create an account.
+3. Go to Account & Settings → API Keys.
+4. Switch to Test Mode.
+5. Generate your Test Key ID and Key Secret.
+Official integration guide: Razorpay Standard Checkout
+2. Backend setup (NestJS)
+Install Razorpay:
+npm install razorpay
+
+Add credentials to .env:
+RAZORPAY_KEY_ID=rzp_test_xxxxx
+RAZORPAY_KEY_SECRET=your_secret
+
+Never expose the Key Secret in React or commit it to GitHub.
+Create a Razorpay service
+razorpay.service.ts
+import { Injectable } from '@nestjs/common';
+import Razorpay from 'razorpay';
+
+@Injectable()
+export class RazorpayService {
+  private razorpay: Razorpay;
+
+  constructor() {
+    this.razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
+  }
+
+  async createOrder(amount: number) {
+    return this.razorpay.orders.create({
+      amount: amount * 100, // INR to paise
+      currency: 'INR',
+      receipt: `receipt_${Date.now()}`,
+    });
+  }
+}
+
+Important: Razorpay amounts are specified in the smallest currency unit. For example, ₹500 = 50000 paise. Razorpay
+3. Create a payment controller
+razorpay.controller.ts
+import { Controller, Post, Body } from '@nestjs/common';
+import { RazorpayService } from './razorpay.service';
+
+@Controller('payment')
+export class RazorpayController {
+  constructor(private readonly razorpayService: RazorpayService) {}
+
+  @Post('create-order')
+  async createOrder(@Body() body: { amount: number }) {
+    return this.razorpayService.createOrder(body.amount);
+  }
+}
+
+Register the service and controller in your RazorpayModule.
+
+For a production application, don't accept an arbitrary amount from the frontend. Get the price from your database or trusted backend product data.
+4. React frontend setup
+Add this to your React component:
+import axios from "axios";
+
+const loadRazorpay = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+
+    document.body.appendChild(script);
+  });
+};
+
+const handlePayment = async () => {
+  const loaded = await loadRazorpay();
+
+  if (!loaded) {
+    alert("Razorpay SDK failed to load");
+    return;
+  }
+
+  // Create order from backend
+  const { data: order } = await axios.post(
+    "http://localhost:3000/payment/create-order",
+    { amount: 500 }
+  );
+
+  const options = {
+    key: "rzp_test_xxxxx",
+    amount: order.amount,
+    currency: order.currency,
+    name: "My Website",
+    description: "Payment for order",
+    order_id: order.id,
+
+    handler: async function (response) {
+      console.log("Payment response:", response);
+
+      // Send response to backend for verification
+    },
+  };
+
+  const razorpay = new window.Razorpay(options);
+
+  razorpay.open();
+};
+
+Add a button:
+<button onClick={handlePayment}>
+  Pay ₹500
+</button>
+
+Replace rzp_test_xxxxx with your Test Key ID.
+
+This opens Razorpay Checkout, where the customer can select an available payment method.
+5. Verify payment on the backend
+This is one of the most important steps. Don't mark an order as paid just because React says the payment succeeded.
+
+Razorpay returns:
+- razorpay_order_id
+- razorpay_payment_id
+- razorpay_signature
+Verify the signature using your backend Key Secret and HMAC SHA256. Razorpay
+
+Add this method to your service:
+import * as crypto from 'crypto';
+
+verifyPayment(
+  orderId: string,
+  paymentId: string,
+  signature: string,
+) {
+  const generatedSignature = crypto
+    .createHmac(
+      'sha256',
+      process.env.RAZORPAY_KEY_SECRET!,
+    )
+    .update(`${orderId}|${paymentId}`)
+    .digest('hex');
+
+  return generatedSignature === signature;
+}
+
+Add a verification endpoint to your controller:
+@Post('verify')
+verifyPayment(
+  @Body()
+  body: {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+  },
+) {
+  return {
+    verified: this.razorpayService.verifyPayment(
+      body.razorpay_order_id,
+      body.razorpay_payment_id,
+      body.razorpay_signature,
+    ),
+  };
+}
+
+Then call this endpoint from React inside the Checkout handler.
+
+Production note: Validate the order ID against your database, verify the actual payment status/capture status, and update the order as paid only after confirmation. Add Razorpay webhooks to handle payment updates even if the user closes the browser. Curlec
+6. Payment flow architecture
+Your complete payment process should look like this:
+React Frontend
+      |
+      | 1. Request payment order
+      v
+NestJS Backend
+      |
+      | 2. Create Razorpay Order
+      v
+Razorpay API
+      |
+      | 3. Return order_id
+      v
+React Frontend
+      |
+      | 4. Open Razorpay Checkout
+      v
+Customer completes payment
+      |
+      | 5. Receive payment response
+      v
+NestJS Backend
+      |
+      | 6. Verify signature + payment status
+      v
+Database
+      |
+      | 7. Mark order as PAID
+
+Before going live
+- Test payments using Test Mode.
+- Implement Razorpay webhooks.
+- Confirm payments are captured.
+- Store payment and order IDs in your database.
+- Switch to Live Mode only after testing and completing account activation requirements.
+Official documentation
+- Razorpay Node.js SDK
+- Razorpay Checkout integration
+- Razorpay Webhooks
+One question: Are you integrating Razorpay into your existing React + NestJS + GraphQL project, or are you using NestJS REST APIs? I can show the exact module/service/resolver structure based on your setup.
