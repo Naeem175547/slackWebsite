@@ -26,6 +26,7 @@ export class MessageResolver {
       return await this.awsService.getPresignedUploadUrl(60);
     } catch (error) {
       console.log('Error in getPresignedUrl', error);
+      if (error instanceof GraphQLError) throw error;
       throw new GraphQLError('Failed to generate presigned URL');
     }
   }

@@ -12,27 +12,46 @@ import { ConfigService } from '@nestjs/config';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { randomUUID } from 'crypto';
+import { GraphQLError } from 'graphql';
+const REQUIRED_KEYS = [
+    'AWS_REGION',
+    'AWS_ACCESS_KEY_ID',
+    'AWS_SECRET_ACCESS_KEY',
+    'AWS_BUCKET_NAME',
+];
 let AwsService = class AwsService {
     configService;
-    s3;
-    bucketName;
+    s3 = null;
+    bucketName = null;
     constructor(configService) {
         this.configService = configService;
+    }
+    getClient() {
+        if (this.s3 && this.bucketName) {
+            return { s3: this.s3, bucketName: this.bucketName };
+        }
+        const missing = REQUIRED_KEYS.filter((key) => !this.configService.get(key));
+        if (missing.length > 0) {
+            console.log(`AWS is not configured. Missing in .env: ${missing.join(', ')}`);
+            throw new GraphQLError('Image upload is not configured on the server');
+        }
         this.s3 = new S3Client({
-            region: this.configService.getOrThrow('AWS_REGION'),
+            region: this.configService.get('AWS_REGION'),
             credentials: {
-                accessKeyId: this.configService.getOrThrow('AWS_ACCESS_KEY_ID'),
-                secretAccessKey: this.configService.getOrThrow('AWS_SECRET_ACCESS_KEY'),
+                accessKeyId: this.configService.get('AWS_ACCESS_KEY_ID'),
+                secretAccessKey: this.configService.get('AWS_SECRET_ACCESS_KEY'),
             },
         });
-        this.bucketName = this.configService.getOrThrow('AWS_BUCKET_NAME');
+        this.bucketName = this.configService.get('AWS_BUCKET_NAME');
+        return { s3: this.s3, bucketName: this.bucketName };
     }
     async getPresignedUploadUrl(expiresIn = 60) {
+        const { s3, bucketName } = this.getClient();
         const command = new PutObjectCommand({
-            Bucket: this.bucketName,
+            Bucket: bucketName,
             Key: `${Date.now()}-${randomUUID()}`,
         });
-        return getSignedUrl(this.s3, command, { expiresIn });
+        return getSignedUrl(s3, command, { expiresIn });
     }
 };
 AwsService = __decorate([

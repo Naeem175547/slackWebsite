@@ -52,6 +52,12 @@ type Message {
   updatedAt: DateTime!
 }
 
+type PresignedUrlResponse {
+  success: Boolean!
+  message: String!
+  data: String!
+}
+
 type MessageResponse {
   success: Boolean!
   message: String!
@@ -123,6 +129,7 @@ type Query {
   user(id: Int!): UserResponse!
   userByEmail(email: String!): UserResponse!
   userByUsername(username: String!): UserResponse!
+  getPresignedUrl: PresignedUrlResponse!
   getPaginatedMessage(messageParams: MessageParams!, page: Int, limit: Int): MessageResponse!
   getChannelById(channelId: Int!): FullChannelResponse!
   fetchWorkspaces: WorkspacesResponse!
