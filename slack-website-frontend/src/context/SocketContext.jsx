@@ -1,13 +1,33 @@
-import { createContext, useCallback, useEffect, useState } from "react";
-import {io} from 'socket.io-client'
-import { useAuth } from "@/hooks/context/useAuth";
+import { createContext, useCallback, useEffect, useRef, useState } from 'react';
+import {io} from 'socket.io-client';
+
+import { useAuth } from '@/hooks/context/useAuth';
+import { useChannelMessages } from '@/hooks/context/useChannelMessages';
 
 
 const SocketContext=createContext();
 export const SocketContextProvider=({children})=>{
     const { auth } = useAuth();
     const [socket, setSocket] = useState(null);
-    const [currentChannel,setCurrentChannel]=useState(null)
+    const [currentChannel,setCurrentChannel]=useState(null);
+    const { setMessageList } = useChannelMessages();
+    const currentChannelRef = useRef(null);
+
+    useEffect(() => {
+        currentChannelRef.current = currentChannel;
+    }, [currentChannel]);
+
+    // Append live messages, but only for the channel being viewed
+    // (the socket stays in every room it has joined)
+    useEffect(() => {
+        if (!socket) return;
+        const handleNewMessage = (message) => {
+            if (message.channelId !== currentChannelRef.current) return;
+            setMessageList((prev) => [...prev, message]);
+        };
+        socket.on('NewMessageReceived', handleNewMessage);
+        return () => socket.off('NewMessageReceived', handleNewMessage);
+    }, [socket, setMessageList]);
 
     // Create the socket once per login token, and close it on logout/unmount
     useEffect(() => {
@@ -35,8 +55,8 @@ export const SocketContextProvider=({children})=>{
         <SocketContext.Provider  value={{socket,joinChannel,currentChannel}}>
             {children}
         </SocketContext.Provider>
-    )
+    );
 
-}
+};
 
-export default SocketContext
+export default SocketContext;

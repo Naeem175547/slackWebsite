@@ -18,11 +18,11 @@ __decorate([
     __metadata("design:type", Number)
 ], MessageParams.prototype, "channelId", void 0);
 __decorate([
-    Field(() => Int),
+    Field(() => Int, { nullable: true }),
     __metadata("design:type", Number)
 ], MessageParams.prototype, "workspaceId", void 0);
 __decorate([
-    Field(() => Int),
+    Field(() => Int, { nullable: true }),
     __metadata("design:type", Number)
 ], MessageParams.prototype, "userId", void 0);
 MessageParams = __decorate([

@@ -134,8 +134,8 @@ type Query {
 
 input MessageParams {
   channelId: Int!
-  workspaceId: Int!
-  userId: Int!
+  workspaceId: Int
+  userId: Int
 }
 
 type Mutation {

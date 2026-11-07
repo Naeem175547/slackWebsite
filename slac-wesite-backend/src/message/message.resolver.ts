@@ -3,8 +3,11 @@ import { Args, Context, Int, Query, Resolver } from '@nestjs/graphql';
 import { MessageService } from './message.service.js';
 import { MessageResponse } from './types/message.type.js';
 import { MessageParams } from './dto/input.js';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuards } from '../common/guards/auth.guard.js';
 
 @Resolver()
+@UseGuards(AuthGuards)
 export class MessageResolver {
   constructor(private readonly messageService: MessageService) {}
 

@@ -14,6 +14,8 @@ import { Args, Context, Int, Query, Resolver } from '@nestjs/graphql';
 import { MessageService } from './message.service.js';
 import { MessageResponse } from './types/message.type.js';
 import { MessageParams } from './dto/input.js';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuards } from '../common/guards/auth.guard.js';
 let MessageResolver = class MessageResolver {
     messageService;
     constructor(messageService) {
@@ -35,6 +37,7 @@ __decorate([
 ], MessageResolver.prototype, "getPaginatedMessage", null);
 MessageResolver = __decorate([
     Resolver(),
+    UseGuards(AuthGuards),
     __metadata("design:paramtypes", [MessageService])
 ], MessageResolver);
 export { MessageResolver };

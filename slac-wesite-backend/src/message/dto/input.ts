@@ -5,10 +5,10 @@ export class MessageParams {
   @Field(() => Int)
   channelId?: number;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   workspaceId?: number;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   userId?: number;
 }
 
