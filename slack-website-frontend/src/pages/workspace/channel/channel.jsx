@@ -1,5 +1,5 @@
 import { Loader2Icon, TriangleAlertIcon } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ChannelHeader } from '@/components/molecules/channel/channelHeader';
@@ -18,6 +18,7 @@ export default function Channel() {
 
     const { joinChannel } = useSocket();
     const { messageList, setMessageList } = useChannelMessages();
+    const messageContainerRef = useRef(null);
 
     // fetchPolicy is network-only, so this refetches whenever channelId changes
     const {
@@ -44,6 +45,14 @@ export default function Channel() {
         }
     }, [isFetchingMessages, isMessagesError, messages, setMessageList]);
 
+    // Keep the newest message in view when history loads or a new one arrives
+    useEffect(() => {
+        const container = messageContainerRef.current;
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
+    }, [messageList, isFetching]);
+
     if (isFetching) {
         return (
             <div className="h-full flex-1 flex items-center justify-center">
@@ -65,7 +74,7 @@ export default function Channel() {
         <div className="flex flex-col h-full">
             <ChannelHeader name={channelDetails?.name} />
 
-            <div className="flex-1 overflow-y-auto">
+            <div ref={messageContainerRef} className="flex-1 min-h-0 overflow-y-auto">
                 {messageList?.map((message) => (
                     <Message
                         key={message.id}
