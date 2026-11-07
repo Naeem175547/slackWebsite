@@ -23,7 +23,6 @@ let WebsocketGateway = class WebsocketGateway {
     }
     server;
     async handleJoin(socket, data) {
-        console.log('JOIN DATA:', data);
         if (!data?.channelId) {
             return {
                 message: 'channelId is required',
@@ -31,7 +30,7 @@ let WebsocketGateway = class WebsocketGateway {
         }
         const roomId = data.channelId.toString();
         socket.join(roomId);
-        console.log(`User ${socket.id} joined channel: ${roomId}`);
+        console.log("user successfully joined");
         return {
             message: 'You have been added to channel',
             data: {
@@ -40,7 +39,6 @@ let WebsocketGateway = class WebsocketGateway {
         };
     }
     async handleLeave(socket, data) {
-        console.log('LEAVE DATA:', data);
         if (!data?.channelId) {
             return {
                 message: 'channelId is required',
@@ -48,7 +46,6 @@ let WebsocketGateway = class WebsocketGateway {
         }
         const roomId = data.channelId.toString();
         socket.leave(roomId);
-        console.log(`User ${socket.id} left channel: ${roomId}`);
         return {
             message: 'You have left the channel',
             data: {
@@ -63,10 +60,24 @@ let WebsocketGateway = class WebsocketGateway {
             body: data.body,
         }, userId);
         const roomId = data.channelId.toString();
-        this.server.to(roomId).emit(NEW_MESSAGE_RECEIVED_EVENT, savedMessage);
+        const message = {
+            id: savedMessage.id,
+            body: savedMessage.body,
+            image: savedMessage.image,
+            channelId: savedMessage.channel.id,
+            createdAt: savedMessage.createdAt,
+            user: {
+                id: savedMessage.user.id,
+                name: savedMessage.user.name,
+                username: savedMessage.user.username,
+                avatar: savedMessage.user.avatar,
+            },
+        };
+        console.log(message);
+        this.server.to(roomId).emit(NEW_MESSAGE_RECEIVED_EVENT, message);
         return {
             message: 'Message sent successfully',
-            data: savedMessage,
+            data: message,
         };
     }
 };
@@ -99,7 +110,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], WebsocketGateway.prototype, "handleMessage", null);
 WebsocketGateway = __decorate([
-    WebSocketGateway(),
+    WebSocketGateway({ cors: { origin: 'http://localhost:5173' } }),
     UseGuards(WsJwtGuard),
     __metadata("design:paramtypes", [MessageService])
 ], WebsocketGateway);

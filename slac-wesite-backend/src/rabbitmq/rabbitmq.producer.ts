@@ -6,7 +6,6 @@ export class RabbitMqProducer {
   constructor(@Inject('RABBITMQ_SERVICE') private rabbitmq: ClientProxy) {}
 
   sendMail(to: string, subject: string, body: string) {
-    console.log('mail emiting triger----------------')
     this.rabbitmq.emit('sendMail', {
       to,
       subject,

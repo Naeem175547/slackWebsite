@@ -42,11 +42,9 @@ let WorkspaceService = class WorkspaceService {
             const response = await this.workspaceRepository.create(workspaceData);
             await this.workspaceRepository.addMemberToWorkspace(response.id, createWorkspaceDto.ownerId, 'admin');
             await this.workspaceRepository.addChannelToWorkspace(response.id, 'general');
-            console.log('SERVICE RESPONSE:', response);
             return response;
         }
         catch (error) {
-            console.log('CREATE WORKSPACE ERROR:', error);
             if (error.code === 'ER_DUP_ENTRY') {
                 throw new GraphQLError('Workspace with the same name already exists', {
                     extensions: {
@@ -69,7 +67,6 @@ let WorkspaceService = class WorkspaceService {
             return workspaces;
         }
         catch (error) {
-            console.log('Get all workspaces service error', error);
             throw new GraphQLError('Failed to fetch all workspaces', {
                 extensions: {
                     code: 'WORKSPACES_FETCH_FAILED',
@@ -105,7 +102,6 @@ let WorkspaceService = class WorkspaceService {
             if (error instanceof GraphQLError) {
                 throw error;
             }
-            console.log('DELETE WORKSPACE ERROR:', error);
             throw new GraphQLError('Failed to delete workspace', {
                 extensions: {
                     code: 'WORKSPACE_DELETION_FAILED',
@@ -120,7 +116,6 @@ let WorkspaceService = class WorkspaceService {
             return resonse;
         }
         catch (error) {
-            console.log('Get workspaces user is member of service error', error);
             throw error;
         }
     }
@@ -206,9 +201,7 @@ let WorkspaceService = class WorkspaceService {
                     },
                 });
             }
-            console.log('UPDATE INPUT:', updateWorkspaceInput);
             workspace = await this.workspaceRepository.update(workspaceId, updateWorkspaceInput);
-            console.log(workspace);
             return workspace;
         }
         catch (error) {
@@ -270,7 +263,6 @@ let WorkspaceService = class WorkspaceService {
                 });
             }
             const result = await this.workspaceRepository.addMemberToWorkspace(workspaceId, memberId, 'member');
-            console.log(member.email);
             this.rabbitmqproducer.sendMail(member.email, 'added to workSpace', 'congratulation you have been successfully added to workspace');
             return result;
         }

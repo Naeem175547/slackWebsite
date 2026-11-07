@@ -74,7 +74,6 @@ export class WorkspaceResolver {
     @Context() context: any,
   ) {
     const userId = context.req.user.id;
-    console.log('UPDATE INPUT:', updateWorkspaceInput);
 
     return this.workspaceService.UpdateWorkspaceService(
       workspaceId,

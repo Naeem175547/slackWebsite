@@ -3,16 +3,27 @@ import { useGetChannelById } from "@/hooks/channels/useGetChannelById";
 import { Loader2Icon, TriangleAlertIcon } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { ChannelHeader } from "@/components/molecules/channel/channelHeader";
+import { useSocket } from "@/hooks/context/useSocket";
+import { useEffect } from "react";
 
 export default function Channel() {
     const { channelId } = useParams();
-
     const {
         isFetching,
         data: channelsDetails,
         error,
         isError,
     } = useGetChannelById(channelId);
+    const {joinChannel}=useSocket();
+
+    useEffect(()=>{
+      if(!isFetching && !isError){
+        joinChannel(channelId)
+      }
+
+    },[isFetching,isError,joinChannel,channelId])
+
+
 
     if (isFetching) {
         return <div className="h-full flex-1 flex items-center justify-center bg-red-500 ">

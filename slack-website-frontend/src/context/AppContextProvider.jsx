@@ -7,8 +7,8 @@ import { CreateChannelContextProvider } from './createChannelContext';
 import WorkspaceContextProvider from './WorkspaceContext';
 import { SocketContextProvider } from './SocketContext';
 const AppContextProvider = combineContext(
-  SocketContextProvider,
   AuthContextProvider,
+  SocketContextProvider,
   WorkspaceContextProvider,
   CreateWorkspaceContextProvider,
   WorkspacePreferencesModalContextProvider,

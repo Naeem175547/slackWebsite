@@ -44,7 +44,6 @@ export class UserService {
         });
       }
       
-      console.error('Error creating user:', error);
       throw error;
     }
   }

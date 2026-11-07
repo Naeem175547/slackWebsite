@@ -58,10 +58,8 @@ export class WorkspaceService {
         response.id,
         'general', //workspaceId
       ); //default channel
-      console.log('SERVICE RESPONSE:', response);
       return response;
     } catch (error: any) {
-      console.log('CREATE WORKSPACE ERROR:', error);
       if (error.code === 'ER_DUP_ENTRY') {
         throw new GraphQLError('Workspace with the same name already exists', {
           extensions: {
@@ -85,7 +83,6 @@ export class WorkspaceService {
       const workspaces = await this.workspaceRepository.findAll();
       return workspaces;
     } catch (error) {
-      console.log('Get all workspaces service error', error);
       throw new GraphQLError('Failed to fetch all workspaces', {
         extensions: {
           code: 'WORKSPACES_FETCH_FAILED',
@@ -127,7 +124,6 @@ export class WorkspaceService {
         throw error;
       }
 
-      console.log('DELETE WORKSPACE ERROR:', error);
       throw new GraphQLError('Failed to delete workspace', {
         extensions: {
           code: 'WORKSPACE_DELETION_FAILED',
@@ -142,7 +138,6 @@ export class WorkspaceService {
         await this.workspaceRepository.fetchAllWorkspacesByMemberId(userId);
       return resonse;
     } catch (error) {
-      console.log('Get workspaces user is member of service error', error);
       throw error;
     }
   }
@@ -239,13 +234,11 @@ export class WorkspaceService {
           },
         });
       }
-      console.log('UPDATE INPUT:', updateWorkspaceInput);
 
       workspace = await this.workspaceRepository.update(
         workspaceId,
         updateWorkspaceInput,
       );
-      console.log(workspace);
       return workspace;
     } catch (error: any) {
       if (error instanceof GraphQLError) {
@@ -331,7 +324,6 @@ export class WorkspaceService {
         memberId,
         'member',
       );
-      console.log(member.email);
       this.rabbitmqproducer.sendMail(
         member.email,
         'added to workSpace',

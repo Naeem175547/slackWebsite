@@ -51,7 +51,6 @@ let WorkspaceResolver = class WorkspaceResolver {
     }
     UpdateWorkspace(workspaceId, updateWorkspaceInput, context) {
         const userId = context.req.user.id;
-        console.log('UPDATE INPUT:', updateWorkspaceInput);
         return this.workspaceService.UpdateWorkspaceService(workspaceId, updateWorkspaceInput, userId);
     }
     addMemberToWorkspace(context, workspaceId, memberId) {
