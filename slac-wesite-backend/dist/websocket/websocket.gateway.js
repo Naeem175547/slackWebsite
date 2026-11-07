@@ -58,6 +58,7 @@ let WebsocketGateway = class WebsocketGateway {
         const savedMessage = await this.messageService.createMessageService({
             channelId: data.channelId,
             body: data.body,
+            image: data.image ?? undefined,
         }, userId);
         const roomId = data.channelId.toString();
         const message = {

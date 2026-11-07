@@ -82,6 +82,7 @@ export default function Channel() {
                         authorImage={message.user?.avatar}
                         authorName={message.user?.username || 'Unknown user'}
                         createdAt={message.createdAt}
+                        image={message.image}
                     />
                 ))}
             </div>

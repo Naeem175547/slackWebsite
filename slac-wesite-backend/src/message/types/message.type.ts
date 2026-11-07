@@ -24,6 +24,18 @@ export class Message {
 }
 
 @ObjectType()
+export class PresignedUrlResponse {
+  @Field()
+  success: boolean;
+
+  @Field()
+  message: string;
+
+  @Field()
+  data: string;
+}
+
+@ObjectType()
 export class MessageResponse {
   @Field()
   success: boolean;

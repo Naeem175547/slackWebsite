@@ -11,20 +11,39 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 import { Args, Context, Int, Query, Resolver } from '@nestjs/graphql';
+import { GraphQLError } from 'graphql';
 import { MessageService } from './message.service.js';
-import { MessageResponse } from './types/message.type.js';
+import { MessageResponse, PresignedUrlResponse, } from './types/message.type.js';
 import { MessageParams } from './dto/input.js';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuards } from '../common/guards/auth.guard.js';
+import { AwsService } from '../aws/aws.service.js';
 let MessageResolver = class MessageResolver {
     messageService;
-    constructor(messageService) {
+    awsService;
+    constructor(messageService, awsService) {
         this.messageService = messageService;
+        this.awsService = awsService;
+    }
+    async getPresignedUrl() {
+        try {
+            return await this.awsService.getPresignedUploadUrl(60);
+        }
+        catch (error) {
+            console.log('Error in getPresignedUrl', error);
+            throw new GraphQLError('Failed to generate presigned URL');
+        }
     }
     async getPaginatedMessage(context, messageParams, page, limit) {
         return await this.messageService.getPaginatedMessageSerive(messageParams, page || 1, limit || 20, context.req.user.id);
     }
 };
+__decorate([
+    Query(() => PresignedUrlResponse),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], MessageResolver.prototype, "getPresignedUrl", null);
 __decorate([
     Query(() => MessageResponse),
     __param(0, Context()),
@@ -38,7 +57,8 @@ __decorate([
 MessageResolver = __decorate([
     Resolver(),
     UseGuards(AuthGuards),
-    __metadata("design:paramtypes", [MessageService])
+    __metadata("design:paramtypes", [MessageService,
+        AwsService])
 ], MessageResolver);
 export { MessageResolver };
 //# sourceMappingURL=message.resolver.js.map

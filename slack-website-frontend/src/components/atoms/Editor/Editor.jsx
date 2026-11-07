@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Icon, ImageIcon, LucideChartCandlestick, LucideToggleLeft, MessageSquareDashedIcon, MousePointerSquareDashedIcon, ToggleLeft, ToggleRight, ToggleRightIcon } from "lucide-react";
+import { Icon, ImageIcon, LucideChartCandlestick, LucideToggleLeft, MessageSquareDashedIcon, MousePointerSquareDashedIcon, ToggleLeft, ToggleRight, ToggleRightIcon, XIcon } from "lucide-react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MdSend } from "react-icons/md";
 import { Hint } from "@/components/atoms/Hint/Hint";
 
@@ -28,9 +28,28 @@ export const Editor = ({
     const defaultValueRef = useRef(defaultValue);
     const placeholderRef = useRef(placeholder);
 
+    const [image, setImage] = useState(null);
+    const imageInputRef = useRef(null);
+    // Quill's Enter handler is created once, so it reads the image through a ref
+    const imageRef = useRef(null);
+
     useEffect(() => {
         submitRef.current = onSubmit;
+        imageRef.current = image;
     });
+
+    // Create the preview URL once per file and free it when the file changes
+    const imagePreviewUrl = useMemo(() => (image ? URL.createObjectURL(image) : null), [image]);
+    useEffect(() => {
+        return () => {
+            if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
+        };
+    }, [imagePreviewUrl]);
+
+    function clearImage() {
+        setImage(null);
+        if (imageInputRef.current) imageInputRef.current.value = '';
+    }
 
       function toggleToolbar() {
         setIsToolbarvisible(!isToolbarVisible);
@@ -68,8 +87,12 @@ export const Editor = ({
                             key: "Enter",
                             shiftKey: false,
                             handler: () => {
-                                submitRef.current?.({ body: JSON.stringify(quill.getContents()) });
+                                submitRef.current?.({
+                                    body: JSON.stringify(quill.getContents()),
+                                    image: imageRef.current,
+                                });
                                 quill.setText('');
+                                clearImage();
                                 return false;
                             }
                         },
@@ -106,6 +129,23 @@ export const Editor = ({
         <div className="flex flex-col justify-end w-full h-full">
             <div className="flex flex-col border border-slate-300 rounded-md overflow-hidden focus-within:shadow-sm focus-within:border-slate-400 bg-white transition">
                 <div className="h-full ql-custom" ref={containerRef} />
+                {image && (
+                    <div className="p-2">
+                        <div className="relative size-[60px] flex items-center justify-center group/image">
+                            <button
+                                className="hidden group-hover/image:flex rounded-full bg-black/70 hover:bg-black absolute -top-2.5 -right-2.5 text-white size-6 z-[5] border-2 border-white items-center justify-center"
+                                onClick={clearImage}
+                            >
+                                <XIcon className="size-4" />
+                            </button>
+                            <img
+                                src={imagePreviewUrl}
+                                alt="Selected attachment"
+                                className="rounded-xl overflow-hidden border object-cover size-full"
+                            />
+                        </div>
+                    </div>
+                )}
                  <div className='flex px-2 pb-2 z-[5]'>
                      <Hint label={!isToolbarVisible ? 'Show toolbar' : 'Hide toolbar'} side='bottom' align='center'>
                         <Button
@@ -123,12 +163,19 @@ export const Editor = ({
                             size="iconMd"
                             variant="ghost"
                             disabled={false}
-                            onClick={() => {}}
+                            onClick={() => imageInputRef.current?.click()}
                         >
                             <ImageIcon className='size-4' />
                         </Button>
 
                     </Hint>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        ref={imageInputRef}
+                        onChange={(e) => setImage(e.target.files?.[0] ?? null)}
+                    />
 
                     
                     <div className="ml-auto">
@@ -138,8 +185,9 @@ export const Editor = ({
                                 className="bg-[#007a6a] hover:bg-[#007a6a]/80 text-white"
                                 onClick={() => {
                                 const messageContent = JSON.stringify(quillRef.current?.getContents());
-                                onSubmit({ body: messageContent });
+                                onSubmit({ body: messageContent, image });
                                 quillRef.current?.setText('');
+                                clearImage();
                                 }}
                                 disabled={false}
                             >

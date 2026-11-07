@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const GET_PAGINATED_MESSAGES = gql`
   query GetPaginatedMessages(
@@ -26,6 +26,16 @@ export const GET_PAGINATED_MESSAGES = gql`
           avatar
         }
       }
+    }
+  }
+`;
+
+export const GET_PRESIGNED_URL = gql`
+  query GetPresignedUrl {
+    getPresignedUrl {
+      success
+      message
+      data
     }
   }
 `;

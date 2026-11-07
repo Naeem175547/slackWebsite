@@ -85,6 +85,7 @@ export class WebsocketGateway {
     data: {
       channelId: number;
       body: string;
+      image?: string | null;
     },
   ) {
     const userId = socket.data.user.id;
@@ -93,6 +94,7 @@ export class WebsocketGateway {
       {
         channelId: data.channelId,
         body: data.body,
+        image: data.image ?? undefined,
       },
       userId,
     );

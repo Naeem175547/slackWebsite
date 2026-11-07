@@ -7,6 +7,11 @@ export declare class Message {
     createdAt: Date;
     updatedAt: Date;
 }
+export declare class PresignedUrlResponse {
+    success: boolean;
+    message: string;
+    data: string;
+}
 export declare class MessageResponse {
     success: boolean;
     message: string;
