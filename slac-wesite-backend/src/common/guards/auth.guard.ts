@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 import { Observable } from 'rxjs';
@@ -38,10 +43,12 @@ export class AuthGuards implements CanActivate {
 
       const payload = this.authService.verifyJWT(token);
       request.user = payload;
-
       return true;
     } catch (err) {
-      return false; //because this will throw jwt token error auto
+      if (err instanceof GraphQLError) throw err;
+      throw new UnauthorizedException(
+        err instanceof Error ? err.message : 'Invalid token',
+      );
     }
   }
 }

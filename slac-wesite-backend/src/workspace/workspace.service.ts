@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { UpdateWorkspaceInput } from './dto/update.workspace.input.js';
 import { UserService } from '../user/user.service.js';
 import { RabbitMqProducer } from '../rabbitmq/rabbitmq.producer.js';
+import { graphql } from 'graphql';
 
 @Injectable()
 export class WorkspaceService {
@@ -57,10 +58,8 @@ export class WorkspaceService {
         response.id,
         'general', //workspaceId
       ); //default channel
-      console.log('SERVICE RESPONSE:', response);
       return response;
     } catch (error: any) {
-      console.log('CREATE WORKSPACE ERROR:', error);
       if (error.code === 'ER_DUP_ENTRY') {
         throw new GraphQLError('Workspace with the same name already exists', {
           extensions: {
@@ -84,7 +83,6 @@ export class WorkspaceService {
       const workspaces = await this.workspaceRepository.findAll();
       return workspaces;
     } catch (error) {
-      console.log('Get all workspaces service error', error);
       throw new GraphQLError('Failed to fetch all workspaces', {
         extensions: {
           code: 'WORKSPACES_FETCH_FAILED',
@@ -126,7 +124,6 @@ export class WorkspaceService {
         throw error;
       }
 
-      console.log('DELETE WORKSPACE ERROR:', error);
       throw new GraphQLError('Failed to delete workspace', {
         extensions: {
           code: 'WORKSPACE_DELETION_FAILED',
@@ -141,7 +138,6 @@ export class WorkspaceService {
         await this.workspaceRepository.fetchAllWorkspacesByMemberId(userId);
       return resonse;
     } catch (error) {
-      console.log('Get workspaces user is member of service error', error);
       throw error;
     }
   }
@@ -238,13 +234,11 @@ export class WorkspaceService {
           },
         });
       }
-      console.log('UPDATE INPUT:', updateWorkspaceInput);
 
       workspace = await this.workspaceRepository.update(
         workspaceId,
         updateWorkspaceInput,
       );
-      console.log(workspace);
       return workspace;
     } catch (error: any) {
       if (error instanceof GraphQLError) {
@@ -330,7 +324,6 @@ export class WorkspaceService {
         memberId,
         'member',
       );
-      console.log(member.email);
       this.rabbitmqproducer.sendMail(
         member.email,
         'added to workSpace',
@@ -409,5 +402,37 @@ export class WorkspaceService {
         },
       });
     }
+  }
+  async resetWorkspaceJoinCodeService(worksapceId:number,userId:number){
+      const newJoinCode=uuidv4().substring(0,6).toUpperCase();
+      const updatedWorkspace=await this.UpdateWorkspaceService(worksapceId,{joinCode:newJoinCode},userId)
+      return updatedWorkspace;
+
+  }
+  async joinWorkspaceService(workspaceId:number,joinCode:string,userId:number){
+    try{
+      const workspace=await this.workspaceRepository.getWorkspaceDetailsById(workspaceId)
+    if(!workspace){
+      throw new GraphQLError('workspace not found')
+    }
+
+    if(workspace.joinCode!==joinCode.trim().toUpperCase()){
+      throw new GraphQLError('Invalid join Code')
+    }
+
+    const workspaceMember=await this.workspaceRepository.addMemberToWorkspace(workspaceId,userId,'member')
+    return workspaceMember;
+
+    }
+    catch(error){
+      if(error instanceof GraphQLError){
+        throw error;
+      }
+      throw new GraphQLError('join workspace operation failed')
+    }
+
+
+
+
   }
 }

@@ -1,0 +1,1 @@
+{"version":3,"file":"mailObject.js","sourceRoot":"","sources":["../../../src/common/utils/mailObject.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,QAAQ,EAAU,MAAM,8BAA8B,CAAC;AAEhE,MAAM,CAAC,MAAM,eAAe,GAAG,UAAU,iBAAwB;IAC/D,OAAO;QACL,OAAO,EAAE,8CAA8C;QACvD,IAAI,EAAE;;OAEH,QAAQ,WAAW,iBAAiB;KACtC;KACF,CAAC;AACJ,CAAC,CAAC"}

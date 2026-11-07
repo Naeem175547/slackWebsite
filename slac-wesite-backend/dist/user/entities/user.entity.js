@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, BeforeInsert, OneToMany, } from 'typeorm';
 import { MessageEntity } from '../../message/entity/message.entity.js';
 import { WorkspaceMemberEntity } from '../../workspace/entity/workspace-member.entity.js';
+import { v4 as uuidv4 } from 'uuid';
 let UserEntity = class UserEntity {
     id;
     email;
@@ -21,8 +22,13 @@ let UserEntity = class UserEntity {
     workspaceMembers;
     createdAt;
     updatedAt;
-    generateAvatar() {
+    isVarified;
+    token;
+    tokenExpiryDate;
+    generate() {
         this.avatar = `https://robohash.org/${this.username}`;
+        this.token = uuidv4().substring(0, 10).toUpperCase();
+        this.tokenExpiryDate = new Date(Date.now() + 1000 * 60 * 60);
     }
 };
 __decorate([
@@ -66,11 +72,23 @@ __decorate([
     __metadata("design:type", Date)
 ], UserEntity.prototype, "updatedAt", void 0);
 __decorate([
+    Column({ default: false }),
+    __metadata("design:type", Boolean)
+], UserEntity.prototype, "isVarified", void 0);
+__decorate([
+    Column({ type: 'varchar', length: 255, nullable: true }),
+    __metadata("design:type", Object)
+], UserEntity.prototype, "token", void 0);
+__decorate([
+    Column({ type: 'datetime', nullable: true }),
+    __metadata("design:type", Object)
+], UserEntity.prototype, "tokenExpiryDate", void 0);
+__decorate([
     BeforeInsert(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], UserEntity.prototype, "generateAvatar", null);
+], UserEntity.prototype, "generate", null);
 UserEntity = __decorate([
     Entity({ name: 'users' })
 ], UserEntity);

@@ -6,12 +6,14 @@ import { MessageEntity } from './entity/message.entity.js';
 import { MessageRepository } from './message.repository.js';
 import { ChannelModule } from '../channel/channel.module.js';
 import { UserModule } from '../user/user.module.js';
+import { AwsModule } from '../aws/aws.module.js';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([MessageEntity]),
     ChannelModule,
     UserModule,
+    AwsModule,
   ],
   providers: [MessageResolver, MessageService, MessageRepository],
   exports: [MessageService],

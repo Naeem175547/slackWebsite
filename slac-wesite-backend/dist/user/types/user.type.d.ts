@@ -6,6 +6,9 @@ export declare class User {
     avatar: string;
     createdAt: Date;
     updatedAt: Date;
+    isVarified: boolean;
+    token: string;
+    tokenExpiryDate: Date;
 }
 export declare class UsersResponse {
     success: boolean;

@@ -10,6 +10,8 @@ import {
 import type { Relation } from 'typeorm';
 import { MessageEntity } from '../../message/entity/message.entity.js';
 import { WorkspaceMemberEntity } from '../../workspace/entity/workspace-member.entity.js';
+import { UUID } from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -46,8 +48,21 @@ export class UserEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Column({default:false})
+  isVarified:boolean
+
+  @Column({type:'varchar',length:255,nullable:true})
+  token:string | null
+
+  @Column({ type: 'datetime', nullable: true })
+   tokenExpiryDate: Date | null;
+
+
   @BeforeInsert()
-  generateAvatar() {
+  generate() {
     this.avatar = `https://robohash.org/${this.username}`;
+    this.token=uuidv4().substring(0,10).toUpperCase();
+    this.tokenExpiryDate=new Date(Date.now()+1000*60*60);
   }
+
 }

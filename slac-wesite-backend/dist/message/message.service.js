@@ -59,7 +59,7 @@ let MessageService = class MessageService {
         if (!workspace) {
             throw new GraphQLError('Workspace not found');
         }
-        const isMember = await isUserMemberOfWorkspace(workspace.id, userId);
+        const isMember = isUserMemberOfWorkspace(workspace, userId);
         if (!isMember) {
             throw new GraphQLError('You are not a member of this workspace');
         }

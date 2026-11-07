@@ -40,10 +40,22 @@ export class MessageRepository {
     });
   }
 
-  async getPaginatedMessage(messageParams: any, page: number, limit: number) {
+  async getPaginatedMessage(
+    messageParams: { channelId?: number; workspaceId?: number; userId?: number },
+    page: number,
+    limit: number,
+  ) {
+    // MessageParams uses plain ids, but the entity stores them as relations
+    const where: Record<string, unknown> = {};
+    if (messageParams.channelId) where.channel = { id: messageParams.channelId };
+    if (messageParams.workspaceId)
+      where.workspace = { id: messageParams.workspaceId };
+    if (messageParams.userId) where.user = { id: messageParams.userId };
+
     return this.messageRepository.find({
       order: { createdAt: 'DESC' },
-      where: messageParams,
+      where,
+      relations: { user: true },
       skip: (page - 1) * limit,
       take: limit,
     });

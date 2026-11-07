@@ -25,8 +25,6 @@ export class ChannelService {
         userId,
       );
 
-      console.log(channel);
-      console.log(channel.workspace.members);
 
       if (!isUserPartOfWorkspace) {
         throw new UnauthorizedException(
@@ -36,7 +34,6 @@ export class ChannelService {
 
       return channel;
     } catch (error) {
-      console.log('Get channel by ID service error', error);
       throw error;
     }
   }

@@ -7,7 +7,11 @@ export declare class MessageRepository {
     findAll(): Promise<MessageEntity[]>;
     findOne(id: number): Promise<MessageEntity | null>;
     findOneWithRelations(id: number): Promise<MessageEntity | null>;
-    getPaginatedMessage(messageParams: any, page: number, limit: number): Promise<MessageEntity[]>;
+    getPaginatedMessage(messageParams: {
+        channelId?: number;
+        workspaceId?: number;
+        userId?: number;
+    }, page: number, limit: number): Promise<MessageEntity[]>;
     findByChannel(channelId: number): Promise<MessageEntity[]>;
     findByWorkspace(workspaceId: number): Promise<MessageEntity[]>;
     findByUser(userId: number): Promise<MessageEntity[]>;

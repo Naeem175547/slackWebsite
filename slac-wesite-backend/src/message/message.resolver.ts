@@ -1,12 +1,35 @@
 import { Args, Context, Int, Query, Resolver } from '@nestjs/graphql';
 
+import { GraphQLError } from 'graphql';
 import { MessageService } from './message.service.js';
-import { MessageResponse } from './types/message.type.js';
+import {
+  MessageResponse,
+  PresignedUrlResponse,
+} from './types/message.type.js';
 import { MessageParams } from './dto/input.js';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuards } from '../common/guards/auth.guard.js';
+import { AwsService } from '../aws/aws.service.js';
 
 @Resolver()
+@UseGuards(AuthGuards)
 export class MessageResolver {
-  constructor(private readonly messageService: MessageService) {}
+  constructor(
+    private readonly messageService: MessageService,
+    private readonly awsService: AwsService,
+  ) {}
+
+  // Client uploads the image straight to S3 with this URL
+  @Query(() => PresignedUrlResponse)
+  async getPresignedUrl() {
+    try {
+      return await this.awsService.getPresignedUploadUrl(60);
+    } catch (error) {
+      console.log('Error in getPresignedUrl', error);
+      if (error instanceof GraphQLError) throw error;
+      throw new GraphQLError('Failed to generate presigned URL');
+    }
+  }
 
   @Query(() => MessageResponse)
   async getPaginatedMessage(

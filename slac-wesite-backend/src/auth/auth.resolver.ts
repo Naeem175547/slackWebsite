@@ -7,16 +7,42 @@ import { GraphQLError } from 'graphql';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from './auth.service.js';
 import { LoginResponse } from './dto/login.response.type.js';
+import { ENABLE_EMAIL_VERIFICATION } from '../config/serverConfig.js';
+import { RabbitMqProducer } from '../rabbitmq/rabbitmq.producer.js';
+import { verifyEmailMail } from '../common/utils/mailObject.js';
 
 @Resolver()
 export class AuthResolver {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
+    private readonly rabbitmqProducer:RabbitMqProducer
   ) {}
   @Mutation(() => UserResponse)
-  signUp(@Args('createUserInput') createUserInput: CreateUserInput) {
-    return this.userService.create(createUserInput);
+  async signUp(@Args('createUserInput') createUserInput: CreateUserInput) {
+    try{
+      const user= await this.userService.create(createUserInput);
+      if(ENABLE_EMAIL_VERIFICATION){
+        if(!user.token){
+          throw new GraphQLError('token missing...')
+        }
+        const mail=verifyEmailMail(user.token)
+        this.rabbitmqProducer.sendMail(user.email,mail.subject,mail.text)
+      }
+      return user;
+    }
+    catch(error){
+      throw new GraphQLError('user creation failed...')
+
+
+    }
+  }
+
+  @Mutation(()=>Boolean)
+  async verifyToken(@Args('token',{type:()=>String}) token:string){  
+    return this.authService.verifyToken(token)  
+
+
   }
 
   @Mutation(() => LoginResponse)
@@ -34,6 +60,8 @@ export class AuthResolver {
         },
       });
     }
+
+    
 
     const isPassMatched = await bcrypt.compare(password, user.password);
     if (!isPassMatched) {

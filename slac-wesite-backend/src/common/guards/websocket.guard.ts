@@ -20,7 +20,7 @@ export class WsJwtGuard implements CanActivate {
 
       // Store authenticated user on socket
       socket.data.user = {
-        id: payload.sub,
+        id: payload.id,
         email: payload.email,
       };
 

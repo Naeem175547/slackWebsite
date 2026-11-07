@@ -22,6 +22,17 @@ export class User {
 
   @Field()
   updatedAt: Date;
+
+  @Field()
+  isVarified:boolean
+
+  @Field(()=>String)
+  token:string
+
+  @Field(()=>Date)
+  tokenExpiryDate:Date;
+  
+
 }
 
 @ObjectType()

@@ -45,6 +45,27 @@ Message = __decorate([
     ObjectType()
 ], Message);
 export { Message };
+let PresignedUrlResponse = class PresignedUrlResponse {
+    success;
+    message;
+    data;
+};
+__decorate([
+    Field(),
+    __metadata("design:type", Boolean)
+], PresignedUrlResponse.prototype, "success", void 0);
+__decorate([
+    Field(),
+    __metadata("design:type", String)
+], PresignedUrlResponse.prototype, "message", void 0);
+__decorate([
+    Field(),
+    __metadata("design:type", String)
+], PresignedUrlResponse.prototype, "data", void 0);
+PresignedUrlResponse = __decorate([
+    ObjectType()
+], PresignedUrlResponse);
+export { PresignedUrlResponse };
 let MessageResponse = class MessageResponse {
     success;
     message;

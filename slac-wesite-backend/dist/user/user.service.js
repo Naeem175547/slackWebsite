@@ -40,7 +40,6 @@ let UserService = class UserService {
                     },
                 });
             }
-            console.error('Error creating user:', error);
             throw error;
         }
     }
@@ -85,6 +84,20 @@ let UserService = class UserService {
                     code: 'NOT_FOUND',
                     statuscode: 404,
                 },
+            });
+        }
+        return user;
+    }
+    async findUserByToken(token) {
+        const user = await this.userRepo.findOne({ where: {
+                token
+            } });
+        if (!user) {
+            throw new GraphQLError('User now found', {
+                extensions: {
+                    code: 'NOT_FOUND',
+                    statuscode: 404
+                }
             });
         }
         return user;

@@ -12,6 +12,7 @@ import { IsOptional, IsString } from 'class-validator';
 let UpdateWorkspaceInput = class UpdateWorkspaceInput {
     name;
     description;
+    joinCode;
 };
 __decorate([
     Field({ nullable: true }),
@@ -25,6 +26,12 @@ __decorate([
     IsString(),
     __metadata("design:type", String)
 ], UpdateWorkspaceInput.prototype, "description", void 0);
+__decorate([
+    Field({ nullable: true }),
+    IsOptional(),
+    IsString(),
+    __metadata("design:type", String)
+], UpdateWorkspaceInput.prototype, "joinCode", void 0);
 UpdateWorkspaceInput = __decorate([
     InputType()
 ], UpdateWorkspaceInput);

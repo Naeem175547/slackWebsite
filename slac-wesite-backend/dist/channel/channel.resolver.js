@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Args, Context, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Int, Query, Resolver } from '@nestjs/graphql';
 import { FullChannelResponse } from './types/channel.type.js';
 import { ChannelService } from './channel.service.js';
 import { UseGuards } from '@nestjs/common';
@@ -27,7 +27,7 @@ let ChannelResolver = class ChannelResolver {
 };
 __decorate([
     Query(() => FullChannelResponse),
-    __param(0, Args('channelId')),
+    __param(0, Args('channelId', { type: () => Int })),
     __param(1, Context()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Object]),

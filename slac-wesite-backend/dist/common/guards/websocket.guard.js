@@ -24,7 +24,7 @@ let WsJwtGuard = class WsJwtGuard {
         try {
             const payload = this.jwtService.verify(token);
             socket.data.user = {
-                id: payload.sub,
+                id: payload.id,
                 email: payload.email,
             };
             return true;

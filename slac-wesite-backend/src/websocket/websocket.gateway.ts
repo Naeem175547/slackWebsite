@@ -19,7 +19,7 @@ import { MessageService } from '../message/message.service.js';
 import { UseGuards } from '@nestjs/common';
 import { WsJwtGuard } from '../common/guards/websocket.guard.js';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: { origin: 'http://localhost:5173' } })
 @UseGuards(WsJwtGuard)
 export class WebsocketGateway {
   constructor(private readonly messageService: MessageService) {}
@@ -32,7 +32,6 @@ export class WebsocketGateway {
     @ConnectedSocket() socket: Socket,
     @MessageBody() data: { channelId: number },
   ) {
-    console.log('JOIN DATA:', data);
 
     if (!data?.channelId) {
       return {
@@ -41,11 +40,9 @@ export class WebsocketGateway {
     }
 
     const roomId = data.channelId.toString();
-
-    // Join Socket.IO room
     socket.join(roomId);
+    console.log("user successfully joined")
 
-    console.log(`User ${socket.id} joined channel: ${roomId}`);
 
     return {
       message: 'You have been added to channel',
@@ -63,7 +60,6 @@ export class WebsocketGateway {
     @ConnectedSocket() socket: Socket,
     @MessageBody() data: { channelId: number },
   ) {
-    console.log('LEAVE DATA:', data);
 
     if (!data?.channelId) {
       return {
@@ -73,7 +69,6 @@ export class WebsocketGateway {
 
     const roomId = data.channelId.toString();
     socket.leave(roomId);
-    console.log(`User ${socket.id} left channel: ${roomId}`);
 
     return {
       message: 'You have left the channel',
@@ -90,6 +85,7 @@ export class WebsocketGateway {
     data: {
       channelId: number;
       body: string;
+      image?: string | null;
     },
   ) {
     const userId = socket.data.user.id;
@@ -98,17 +94,34 @@ export class WebsocketGateway {
       {
         channelId: data.channelId,
         body: data.body,
+        image: data.image ?? undefined,
       },
       userId,
     );
 
     const roomId = data.channelId.toString();
+    // console.log('saved Message',savedMessage)
 
-    this.server.to(roomId).emit(NEW_MESSAGE_RECEIVED_EVENT, savedMessage);
+   const message = {
+      id: savedMessage.id,
+      body: savedMessage.body,
+      image: savedMessage.image,
+      channelId: savedMessage.channel.id,
+      createdAt: savedMessage.createdAt,
+      user: {
+        id: savedMessage.user.id,
+        name: savedMessage.user.name,
+        username: savedMessage.user.username,
+        avatar: savedMessage.user.avatar,
+      },
+    };
+    console.log(message)
+
+    this.server.to(roomId).emit(NEW_MESSAGE_RECEIVED_EVENT, message);
 
     return {
       message: 'Message sent successfully',
-      data: savedMessage,
+      data: message,
     };
   }
 }

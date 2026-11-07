@@ -42,9 +42,17 @@ let MessageRepository = class MessageRepository {
         });
     }
     async getPaginatedMessage(messageParams, page, limit) {
+        const where = {};
+        if (messageParams.channelId)
+            where.channel = { id: messageParams.channelId };
+        if (messageParams.workspaceId)
+            where.workspace = { id: messageParams.workspaceId };
+        if (messageParams.userId)
+            where.user = { id: messageParams.userId };
         return this.messageRepository.find({
             order: { createdAt: 'DESC' },
-            where: messageParams,
+            where,
+            relations: { user: true },
             skip: (page - 1) * limit,
             take: limit,
         });

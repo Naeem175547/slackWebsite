@@ -29,8 +29,21 @@ export declare class WebsocketGateway {
     handleMessage(socket: Socket, data: {
         channelId: number;
         body: string;
+        image?: string | null;
     }): Promise<{
         message: string;
-        data: import("../message/entity/message.entity.js").MessageEntity;
+        data: {
+            id: number;
+            body: string;
+            image: string;
+            channelId: number;
+            createdAt: Date;
+            user: {
+                id: number;
+                name: string;
+                username: string;
+                avatar: string;
+            };
+        };
     }>;
 }

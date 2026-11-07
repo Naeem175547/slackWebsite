@@ -9,8 +9,10 @@ import {
   WorkspaceMember,
   WorkspaceMemberResponse,
 } from './dto/workspace.member.type.js';
-@UseGuards(AuthGuards)
+import { multicast } from 'rxjs';
+
 @Resolver()
+@UseGuards(AuthGuards)
 export class WorkspaceResolver {
   constructor(private readonly workspaceService: WorkspaceService) {}
   @Mutation(() => WorkspaceResponse)
@@ -72,7 +74,6 @@ export class WorkspaceResolver {
     @Context() context: any,
   ) {
     const userId = context.req.user.id;
-    console.log('UPDATE INPUT:', updateWorkspaceInput);
 
     return this.workspaceService.UpdateWorkspaceService(
       workspaceId,
@@ -84,8 +85,8 @@ export class WorkspaceResolver {
   @Mutation(() => WorkspaceMemberResponse)
   addMemberToWorkspace(
     @Context() context: any,
-    @Args('workspaceId') workspaceId: number,
-    @Args('memberId') memberId: number,
+    @Args('workspaceId', { type: () => Int }) workspaceId: number,
+    @Args('memberId', { type: () => Int }) memberId: number,
   ) {
     const userId = context.req.user.id;
     return this.workspaceService.addMemberToWorkspaceService(
@@ -98,7 +99,7 @@ export class WorkspaceResolver {
   @Mutation(() => WorkspaceResponse)
   addChannelToWorkspace(
     @Context() context: any,
-    @Args('workspaceId') workspaceId: number,
+    @Args('workspaceId', { type: () => Int }) workspaceId: number,
     @Args('channelName') channelName: string,
   ) {
     const userId = context.req.user.id;
@@ -108,4 +109,18 @@ export class WorkspaceResolver {
       userId,
     );
   }
+  @Mutation(()=>WorkspaceResponse)
+  resetJoinCodeController(@Args('workspaceId',{type:()=>Int}) workspaceId:number,@Context() context:any ){
+    const userId=context.req.user.id;
+    return this.workspaceService.resetWorkspaceJoinCodeService(workspaceId,userId); 
+
+  }
+  @Mutation(()=>WorkspaceMemberResponse)
+  joinWorkspace(@Args('workspaceId',{type:()=>Int}) workspaceId:number,@Args('joinCode') joinCode:string,@Context() context:any){
+    const userId=context.req.user.id;
+    return this.workspaceService.joinWorkspaceService(workspaceId,joinCode,userId)
+
+
+  }
+
 }

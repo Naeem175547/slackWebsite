@@ -8,5 +8,6 @@ export class MailController {
   @EventPattern('sendMail')
   sendMail(@Payload() payload: any) {
     return this.mailService.sendMail(payload.to, payload.subject, payload.body);
+    
   }
 }

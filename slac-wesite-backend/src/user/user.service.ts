@@ -14,6 +14,7 @@ import * as bcrypt from 'bcrypt';
 
 
 
+
 @Injectable()
 export class UserService {
   constructor(
@@ -29,6 +30,7 @@ export class UserService {
         ...createUserInput,
         password: hashedPassword,
       });
+
       const result = await this.userRepo.save(user);
       return result;
     } catch (error: any) {      
@@ -42,7 +44,6 @@ export class UserService {
         });
       }
       
-      console.error('Error creating user:', error);
       throw error;
     }
   }
@@ -99,6 +100,24 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async findUserByToken(token:string){
+    const user=await this.userRepo.findOne({where:{
+      token
+    }})
+    if(!user){
+      throw new GraphQLError('User now found',{
+        extensions:{
+          code:'NOT_FOUND',
+          statuscode:404
+        }
+      })
+    }
+
+    return user;
+
+
   }
 
   async update(id: number, updateUserInput: UpdateUserInput) {

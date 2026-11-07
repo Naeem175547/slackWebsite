@@ -16,6 +16,9 @@ let User = class User {
     avatar;
     createdAt;
     updatedAt;
+    isVarified;
+    token;
+    tokenExpiryDate;
 };
 __decorate([
     Field(),
@@ -45,6 +48,18 @@ __decorate([
     Field(),
     __metadata("design:type", Date)
 ], User.prototype, "updatedAt", void 0);
+__decorate([
+    Field(),
+    __metadata("design:type", Boolean)
+], User.prototype, "isVarified", void 0);
+__decorate([
+    Field(() => String),
+    __metadata("design:type", String)
+], User.prototype, "token", void 0);
+__decorate([
+    Field(() => Date),
+    __metadata("design:type", Date)
+], User.prototype, "tokenExpiryDate", void 0);
 User = __decorate([
     ObjectType()
 ], User);
