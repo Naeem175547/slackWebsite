@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useSignIn } from '@/hooks/auth/useSignIn';
 
@@ -7,6 +7,13 @@ import { SigninCard } from './signInCard';
 
 export const SigninContainer = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  // Page the user tried to open before being sent to sign-in (only same-site paths)
+  const from = location.state?.from;
+  const redirectTo =
+    typeof from === 'string' && from.startsWith('/') && !from.startsWith('//')
+      ? from
+      : '/home';
 
   const [validationError, setValidationError] = useState(null);
 
@@ -45,12 +52,12 @@ export const SigninContainer = () => {
   useEffect(() => {
     if (isSuccess) {
       const timer = setTimeout(() => {
-        navigate('/home');
+        navigate(redirectTo, { replace: true });
       }, 3000);
 
       return () => clearTimeout(timer);
     }
-  }, [isSuccess, navigate]);
+  }, [isSuccess, navigate, redirectTo]);
 
   return (
     <SigninCard

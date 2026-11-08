@@ -32,9 +32,9 @@ export class AuthResolver {
       return user;
     }
     catch(error){
+      console.error('signUp failed:', error);
+      if (error instanceof GraphQLError) throw error;
       throw new GraphQLError('user creation failed...')
-
-
     }
   }
 

@@ -1,15 +1,23 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import Auth from './pages/Auth/auth';
-import { SigninCard } from './components/organisms/Auth/signInCard';
-import NotFound from './pages/notFound/notFound';
-import { SignupContainer } from './components/organisms/Auth/SignupContainer';
-import { SigninContainer } from './components/organisms/Auth/SigninContainer';
+import { Navigate, Route, Routes } from 'react-router-dom';
+
 import { ProtectedRoute } from './components/molecules/ProtectedRoute';
+import { SigninContainer } from './components/organisms/Auth/SigninContainer';
+import { SignupContainer } from './components/organisms/Auth/SignupContainer';
+import { useAuth } from './hooks/context/useAuth';
+import Auth from './pages/Auth/auth';
 import Home from './pages/Home/Home';
-import { WorkspaceLayout } from './pages/workspace/layout';
-import { JoinPage } from './pages/workspace/joinPage';
+import NotFound from './pages/notFound/notFound';
 import Channel from './pages/workspace/channel/channel';
+import { JoinPage } from './pages/workspace/joinPage';
+import { WorkspaceLayout } from './pages/workspace/layout';
+
+// Logged-out visitors go to sign-in; logged-in users see `loggedIn`
+const AuthRedirect = ({ loggedIn }) => {
+  const { auth } = useAuth();
+  if (auth.isLoading) return null;
+  if (!auth.user || !auth.token) return <Navigate to="/auth/signin" replace />;
+  return loggedIn;
+};
 
 export default function AppRoutes() {
   return (
@@ -47,13 +55,14 @@ export default function AppRoutes() {
         }
       />
               <Route
-        path='/workspaces/join/:workspaceId' element={<JoinPage/>}
+        path='/workspaces/join/:workspaceId' element={<ProtectedRoute><JoinPage/></ProtectedRoute>}
         />
         <Route 
             path="/workspaces/:workspaceId/channels/:channelId"
             element={<ProtectedRoute><WorkspaceLayout><Channel/></WorkspaceLayout></ProtectedRoute>} />
 
-      <Route path="/*" element={<NotFound />} />
+      <Route path="/" element={<AuthRedirect loggedIn={<Navigate to="/home" replace />} />} />
+      <Route path="/*" element={<AuthRedirect loggedIn={<NotFound />} />} />
     </Routes>
   );
 }

@@ -1,4 +1,5 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import VerificationInputModule from 'react-verification-input';
 
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,13 @@ export const JoinPage = () => {
     const { workspaceId } = useParams();
     const VerificationInput = VerificationInputModule.default ?? VerificationInputModule;
     const navigate=useNavigate();
-    const {joinWorkspaceMutation,isPending}=useJoinWorkspace(workspaceId);
+    const [searchParams] = useSearchParams();
+    // Invite links carry the code as ?code=XXXXXX so it can be pre-filled
+    const codeFromLink = (searchParams.get('code') || '').trim().toUpperCase().slice(0, 6);
+    const [code, setCode] = useState(codeFromLink);
+    const {joinWorkspaceMutation,isPending}=useJoinWorkspace(workspaceId, {
+        onAlreadyMember: () => navigate(`/workspaces/${workspaceId}`, { replace: true }),
+    });
 
     // VerificationInput passes the entered code to onComplete
     async function handleAddMemberToWorkspace(joinCode) {
@@ -24,7 +31,7 @@ export const JoinPage = () => {
             }
         }
         catch(error){
-            // error toast is already shown by useJoinWorkspace
+            // toast (and redirect for existing members) is handled by useJoinWorkspace
             console.log('Error in joining workspace',error);
         }
     }
@@ -50,6 +57,8 @@ export const JoinPage = () => {
                 </div>
 
                 <VerificationInput 
+                    value={code}
+                    onChange={(value) => setCode(value.toUpperCase())}
                     onComplete={handleAddMemberToWorkspace}
                     length={6}
                     classNames={{
@@ -67,6 +76,14 @@ export const JoinPage = () => {
             <div
                 className='flex gap-x-4'
             >
+                {/* Needed when the code was pre-filled from the invite link (no typing = no onComplete) */}
+                <Button
+                    size="lg"
+                    disabled={code.length !== 6 || isPending}
+                    onClick={() => handleAddMemberToWorkspace(code)}
+                >
+                    {isPending ? 'Joining...' : 'Join'}
+                </Button>
                 <Button size="lg" variant="outline" >
                     <Link to={`/workspaces/${workspaceId}`}>
                         Back to the workspace

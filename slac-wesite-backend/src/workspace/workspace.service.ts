@@ -416,6 +416,13 @@ export class WorkspaceService {
       throw new GraphQLError('workspace not found')
     }
 
+    // Check membership first so an existing member gets a clear answer even with an old code
+    if(this.isUserMemberOfWorkspace(workspace,userId)){
+      throw new GraphQLError('You are already a member of this workspace',{
+        extensions:{ code:'ALREADY_WORKSPACE_MEMBER', httpStatus:400 },
+      })
+    }
+
     if(workspace.joinCode!==joinCode.trim().toUpperCase()){
       throw new GraphQLError('Invalid join Code')
     }

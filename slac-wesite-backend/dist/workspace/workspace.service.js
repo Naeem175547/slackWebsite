@@ -332,6 +332,11 @@ let WorkspaceService = class WorkspaceService {
             if (!workspace) {
                 throw new GraphQLError('workspace not found');
             }
+            if (this.isUserMemberOfWorkspace(workspace, userId)) {
+                throw new GraphQLError('You are already a member of this workspace', {
+                    extensions: { code: 'ALREADY_WORKSPACE_MEMBER', httpStatus: 400 },
+                });
+            }
             if (workspace.joinCode !== joinCode.trim().toUpperCase()) {
                 throw new GraphQLError('Invalid join Code');
             }

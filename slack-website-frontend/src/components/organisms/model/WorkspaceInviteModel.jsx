@@ -1,4 +1,4 @@
-import { CopyIcon, RefreshCcwIcon, Target } from 'lucide-react';
+import { CopyIcon, RefreshCcwIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -10,13 +10,24 @@ export const WorkspaceInviteModal = ({ openInviteModal, setOpenInviteModal, work
     const { currentWorkspace } = useCurrentWorkspace();
     const { resetJoinCodeMutation, isPending } = useResetJoinCode(currentWorkspace?.id);
 
+    // Full invite link; the code rides along as ?code= so the join page is pre-filled
+    const inviteLink = `${window.location.origin}/workspaces/join/${workspaceId}?code=${encodeURIComponent(joinCode ?? '')}`;
+
     async function handleCopy() {
-        const inviteLink = `${joinCode}`;
-        await navigator.clipboard.writeText(inviteLink);
-        toast.add({
-            title: 'Link copied to clipboard',
-            type: 'success'
-        });
+        const inviteText = `Join ${workspaceName}: ${inviteLink}\nJoin code: ${joinCode}`;
+        try {
+            await navigator.clipboard.writeText(inviteText);
+            toast.add({
+                title: 'Invite link copied to clipboard',
+                type: 'success'
+            });
+        } catch {
+            toast.add({
+                title: 'Could not copy the invite link',
+                description: inviteLink,
+                type: 'error'
+            });
+        }
     }
 
     async function handleResetCode() {
@@ -50,7 +61,7 @@ export const WorkspaceInviteModal = ({ openInviteModal, setOpenInviteModal, work
                         <CopyIcon className='size-4 ml-2' />
                     </Button>
                     <a
-                     href={`/workspaces/join/${workspaceId}`}
+                     href={inviteLink}
                      target="_blank"
                      rel="noreferrer"
                       className="text-blue-500"

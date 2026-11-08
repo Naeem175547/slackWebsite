@@ -6,6 +6,7 @@ import { ChannelHeader } from '@/components/molecules/channel/channelHeader';
 import ChatInput from '@/components/molecules/ChatInput/ChatInput';
 import { Message } from '@/components/molecules/Message/Message';
 import { useGetChannelById } from '@/hooks/channels/useGetChannelById';
+import { useAuth } from '@/hooks/context/useAuth';
 import { useChannelMessages } from '@/hooks/context/useChannelMessages';
 import { useSocket } from '@/hooks/context/useSocket';
 import { useGetPaginatedMessages } from '@/hooks/messages/useGetPaginatedMessages';
@@ -17,6 +18,8 @@ export default function Channel() {
     const channelDetails = data?.getChannelById?.data;
 
     const { joinChannel } = useSocket();
+    const { auth } = useAuth();
+    const currentUserId = auth?.user?.id;
     const { messageList, setMessageList } = useChannelMessages();
     const messageContainerRef = useRef(null);
 
@@ -83,6 +86,8 @@ export default function Channel() {
                         authorName={message.user?.username || 'Unknown user'}
                         createdAt={message.createdAt}
                         image={message.image}
+                        // ids can arrive as number or string, so compare as strings
+                        isOwn={currentUserId != null && String(message.user?.id) === String(currentUserId)}
                     />
                 ))}
             </div>
